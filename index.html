@@ -286,11 +286,11 @@
     .brand{min-width:0}
     .brand h1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .brand p,.save-indicator{display:none}
-    #settingsBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
+    #settingsBtn,#tmJumpBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
     @media(max-width:430px){
       .brandrow{align-items:center}
       .brand h1{font-size:15px}
-      #settingsBtn{font-size:11px;padding:7px 8px}
+      #settingsBtn,#tmJumpBtn{font-size:11px;padding:7px 8px}
       .phase-tabs{gap:4px}
       .phase-tab{font-size:9.5px;padding:7px 3px}
     }
@@ -454,11 +454,32 @@
       </div>
       <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
         <div class="save-indicator"><span class="save-dot"></span> Auto-saved locally</div>
+        <button class="ghost-btn small" id="tmJumpBtn">Training Maxes</button>
         <button class="ghost-btn small" id="settingsBtn">Settings / Backup</button>
       </div>
     </div>
     <nav class="phase-tabs" id="phaseTabs"></nav>
   </header>
+
+  <details class="card" id="tmDetails" style="margin-bottom:18px">
+    <summary class="card-head">
+      <div style="min-width:0">
+        <h3>Training Maxes</h3>
+        <div class="subtle" id="tmPhaseLabel"></div>
+        <div class="subtle" id="tmSummary" style="margin-top:3px"></div>
+      </div>
+      <span class="tm-chevron" aria-hidden="true">▾</span>
+    </summary>
+    <div class="card-body">
+      <div class="tm-grid" id="tmGrid"></div>
+      <div class="tm-actions">
+        <button class="ghost-btn small" id="copyTmBtn">Copy previous phase</button>
+        <button class="ghost-btn small" id="autofillTmBtn">Autofill from Wk3 AMRAP</button>
+        <button class="ghost-btn small" id="clearTmBtn">Clear phase TMs</button>
+      </div>
+      <p class="subtle" style="margin:10px 0 0">Calculated working weights use your selected rounding increment. Autofill sets each lift's training max to the estimated 1RM from the previous phase's Week 3 (Realization) AMRAP set.</p>
+    </div>
+  </details>
 
   <main class="grid" id="mainGrid">
     <section>
@@ -468,26 +489,6 @@
     </section>
 
     <aside id="trackerSidebar" style="display:grid;gap:18px">
-      <details class="card" id="tmDetails">
-        <summary class="card-head">
-          <div style="min-width:0">
-            <h3>Training Maxes</h3>
-            <div class="subtle" id="tmPhaseLabel"></div>
-            <div class="subtle" id="tmSummary" style="margin-top:3px"></div>
-          </div>
-          <span class="tm-chevron" aria-hidden="true">▾</span>
-        </summary>
-        <div class="card-body">
-          <div class="tm-grid" id="tmGrid"></div>
-          <div class="tm-actions">
-            <button class="ghost-btn small" id="copyTmBtn">Copy previous phase</button>
-            <button class="ghost-btn small" id="autofillTmBtn">Autofill from Wk3 AMRAP</button>
-            <button class="ghost-btn small" id="clearTmBtn">Clear phase TMs</button>
-          </div>
-          <p class="subtle" style="margin:10px 0 0">Calculated working weights use your selected rounding increment. Autofill sets each lift's training max to the estimated 1RM from the previous phase's Week 3 (Realization) AMRAP set.</p>
-        </div>
-      </details>
-
       <div class="card">
         <div class="card-head"><h3>How the tracker marks progress</h3></div>
         <div class="card-body">
@@ -1548,6 +1549,13 @@
   });
 
   const modal=$('#settingsModal');
+  $('#tmJumpBtn').addEventListener('click',()=>{
+    const details = $('#tmDetails');
+    if(!details) return;
+    details.open = true;
+    details.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
   $('#settingsBtn').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false')});
   $('#closeModal').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')});
   modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}});
