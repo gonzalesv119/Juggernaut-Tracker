@@ -286,11 +286,11 @@
     .brand{min-width:0}
     .brand h1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .brand p,.save-indicator{display:none}
-    #settingsBtn,#tmJumpBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
+    #settingsBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
     @media(max-width:430px){
       .brandrow{align-items:center}
       .brand h1{font-size:15px}
-      #settingsBtn,#tmJumpBtn{font-size:11px;padding:7px 8px}
+      #settingsBtn{font-size:11px;padding:7px 8px}
       .phase-tabs{gap:4px}
       .phase-tab{font-size:9.5px;padding:7px 3px}
     }
@@ -454,7 +454,6 @@
       </div>
       <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
         <div class="save-indicator"><span class="save-dot"></span> Auto-saved locally</div>
-        <button class="ghost-btn small" id="tmJumpBtn">Training Maxes</button>
         <button class="ghost-btn small" id="settingsBtn">Settings / Backup</button>
       </div>
     </div>
@@ -1549,13 +1548,6 @@
   });
 
   const modal=$('#settingsModal');
-  $('#tmJumpBtn').addEventListener('click',()=>{
-    const details = $('#tmDetails');
-    if(!details) return;
-    details.open = true;
-    details.scrollIntoView({behavior:'smooth', block:'start'});
-  });
-
   $('#settingsBtn').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false')});
   $('#closeModal').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')});
   modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}});
