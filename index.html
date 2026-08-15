@@ -281,24 +281,27 @@
       .brandrow{align-items:center}
       .brand h1{font-size:15px}
       #settingsBtn{font-size:11px;padding:7px 8px}
+      .phase-tabs{gap:4px}
+      .phase-tab{font-size:9.5px;padding:7px 3px}
     }
     .phase-tabs{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:7px;
+      display:flex;
+      flex-wrap:nowrap;
+      gap:5px;
       margin:9px 0 0;
       padding:0;
       overflow:visible;
     }
     .phase-tab{
-      width:100%;
+      flex:1 1 0;
+      width:auto;
       min-width:0;
-      min-height:42px;
-      padding:8px 6px;
-      font-size:11px;
+      min-height:40px;
+      padding:7px 4px;
+      font-size:10px;
       white-space:nowrap;
       overflow:hidden;
-      text-overflow:ellipsis;
+      text-overflow:clip;
     }
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
     .card{border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.24)}
@@ -360,24 +363,25 @@
     .acc-row>.acc-reps{grid-area:reps;min-width:0}
     .acc-row>.acc-trend{
       grid-area:trend;
-      grid-column:auto;
+      grid-column:2 / 4;
       width:100%;
       min-width:0;
-      padding:5px 0 1px;
-      display:flex;
-      align-items:center;
-      gap:6px;
-      flex-wrap:wrap;
+      max-width:none;
+      padding:6px 0 1px;
+      display:block;
     }
     .acc-trend .trend-note{
       display:block;
       width:100%;
       min-width:0;
+      max-width:none;
       font-size:10px;
-      line-height:1.4;
+      line-height:1.45;
       white-space:normal;
-      overflow-wrap:anywhere;
+      overflow-wrap:normal;
+      word-break:normal;
     }
+    .acc-trend .trend-badge{margin:0 5px 4px 0}
     .acc-reps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .acc-repbox input{min-height:48px;font-size:18px}
     .calendar-title{font-size:26px}
