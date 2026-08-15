@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Juggernaut Method · Workout Tracker</title>
+<meta name="theme-color" content="#090b0f" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Juggernaut" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+<style>
+  :root{
+    --bg:#090b0f;
+    --panel:#0f131a;
+    --panel2:#131923;
+    --line:#2a3342;
+    --line2:#3a465a;
+    --text:#edf2f7;
+    --muted:#8e9aad;
+    --green:#31d17c;
+    --green-bg:#0f2a20;
+    --blue:#53a7ff;
+    --blue-bg:#0c2340;
+    --yellow:#f3c969;
+    --red:#ff6b6b;
+    --shadow:0 12px 28px rgba(0,0,0,.28);
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--bg);color-scheme:dark}
+  body{
+    margin:0;
+    background:
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+      var(--bg);
+    background-size:28px 28px;
+    color:var(--text);
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    min-height:100vh;
+  }
+  button,input,textarea,select{font:inherit}
+  button{color:inherit}
+  .app{max-width:1320px;margin:0 auto;padding:22px}
+  .topbar{
+    position:sticky;top:0;z-index:20;
+    margin:-22px -22px 20px;
+    padding:16px 22px 14px;
+    background:rgba(9,11,15,.93);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .brandrow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .brand h1{font-size:22px;line-height:1.1;margin:0;letter-spacing:.02em}
+  .brand p{margin:5px 0 0;color:var(--muted);font-size:13px}
+  .phase-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+  .phase-tab,.seg-btn,.ghost-btn,.danger-btn{
+    border:1px solid var(--line2);background:#0d1117;color:var(--text);
+    padding:9px 12px;border-radius:7px;cursor:pointer;transition:.15s ease;
+  }
+  .phase-tab:hover,.seg-btn:hover,.ghost-btn:hover{border-color:#61708a;background:#151b25}
+  .phase-tab.active,.seg-btn.active{background:var(--text);color:#090b0f;border-color:var(--text);font-weight:800}
+  .ghost-btn.small{padding:7px 10px;font-size:12px}
+  .danger-btn{border-color:#713b3b;color:#ffb2b2}
+  .danger-btn:hover{background:#2a1212}
+  .grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(320px,.75fr);gap:18px;align-items:start}
+  @media(max-width:980px){.grid{grid-template-columns:1fr}.topbar{position:relative;margin-bottom:10px}}
+  .card{
+    border:1px solid var(--line);background:linear-gradient(180deg,var(--panel),#0c1016);
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+  }
+  .card-head{padding:16px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .card-head h2,.card-head h3{margin:0;font-size:16px;letter-spacing:.015em}
+  .card-body{padding:17px}
+  .kicker{text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--muted);font-weight:800}
+  .phase-title{font-size:30px;margin:4px 0 2px;line-height:1}
+  .week-note{margin:8px 0 0;color:var(--yellow);font-size:13px}
+  .subtle{color:var(--muted);font-size:12px}
+  .nav-group{margin-top:15px}
+  .nav-label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:7px;font-weight:800}
+  .segmented{display:flex;gap:7px;flex-wrap:wrap}
+  .seg-btn{padding:8px 10px;font-size:12px}
+  .workout-meta{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .workout-title{font-size:24px;font-weight:850;letter-spacing:-.02em}
+  .day-label{color:var(--muted);font-size:12px;margin-top:3px}
+  .date-field{display:flex;flex-direction:column;gap:5px;min-width:170px}
+  label.tiny{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+  input,textarea,select{
+    width:100%;border:1px solid var(--line2);background:#0a0e14;color:var(--text);
+    border-radius:6px;padding:9px 10px;outline:none;
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(83,167,255,.12)}
+  input[type="number"]{appearance:textfield}
+  .tm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+  @media(max-width:360px){.tm-grid{grid-template-columns:1fr}}
+  .tm-box{border:1px solid var(--line);background:var(--panel2);padding:12px;border-radius:7px}
+  .tm-name{font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:800}
+  .tm-box input{font-size:18px;font-weight:800;padding:10px}
+  .tm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .mainlift{margin-top:18px}
+  .prescription-list{display:grid;gap:10px}
+  .prescription{
+    border:1px solid var(--line);background:#0a0e14;border-radius:8px;padding:12px;
+    transition:.15s ease;position:relative;
+  }
+  .prescription.complete{border-color:rgba(49,209,124,.65);background:var(--green-bg)}
+  .prescription.pr{border-color:var(--blue);background:linear-gradient(180deg,var(--blue-bg),#0d192a);box-shadow:0 0 0 1px rgba(83,167,255,.15) inset}
+  .prescription-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .rx-title{font-size:17px;font-weight:850}
+  .complete .rx-title{text-decoration:none}
+  .rx-weight{font-size:13px;color:var(--muted);margin-top:3px}
+  .rx-weight-card{
+    margin-top:8px;display:inline-flex;flex-direction:column;gap:2px;
+    border:1px solid #2f5276;border-left:3px solid var(--blue);background:#0b1623;
+    border-radius:7px;padding:8px 11px;min-width:190px;
+  }
+  .weight-label{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#8fbbe8;font-weight:900}
+  .recommended-weight{font-size:24px;line-height:1.05;color:#f4f9ff;font-weight:950;letter-spacing:-.02em}
+  .target-copy{font-size:11px;color:var(--muted);margin-top:2px}
+  .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:5px 8px;font-size:11px;font-weight:900;letter-spacing:.04em}
+  .badge.amrap{color:var(--yellow);border-color:#66572d;background:#211c0d}
+  .badge.done{color:#a9f4cc;border-color:#256e4b;background:#0b2a1d}
+  .badge.pr{color:#cce6ff;border-color:#2f76c0;background:#0a2b4f;font-size:12px}
+  .badge.baseline{color:#b7d8f8;border-color:#36526f;background:#111d2a}
+  .rep-inputs{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+  .repbox{width:80px}
+  .repbox span{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+  .repbox input{text-align:center;font-weight:800}
+  .e1rm{margin-top:9px;color:#b8d9ff;font-size:12px}
+  .accessories{margin-top:18px}
+  .accessory-list{display:grid;gap:8px}
+  .acc-row{
+    display:grid;grid-template-columns:34px minmax(180px,1.5fr) minmax(110px,.7fr) minmax(90px,.55fr) minmax(110px,.7fr);
+    gap:8px;align-items:center;border:1px solid var(--line);background:#0a0e14;padding:9px;border-radius:7px;
+  }
+  @media(max-width:760px){
+    .acc-row{grid-template-columns:34px 1fr 1fr}
+    .acc-row .acc-name{grid-column:2/4}
+  }
+  .acc-row.done{border-color:rgba(49,209,124,.55);background:var(--green-bg)}
+  .acc-row.done .acc-name input{text-decoration:none;color:#9fd7b8}
+  .check{
+    width:22px;height:22px;accent-color:var(--green);cursor:pointer
+  }
+  .field-cap{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 4px 2px;font-weight:800}
+  .notes{margin-top:18px}
+  textarea{min-height:150px;resize:vertical;line-height:1.45}
+  .progress-wrap{margin-top:14px}
+  .progress-line{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:6px}
+  .progress{height:8px;border:1px solid var(--line);background:#090d12;border-radius:99px;overflow:hidden}
+  .progress > div{height:100%;background:linear-gradient(90deg,#2da76a,#54e39a);width:0%;transition:.2s ease}
+  .info-list{display:grid;gap:10px;font-size:12px;color:#b8c1cf}
+  .info-item{border-left:2px solid var(--line2);padding-left:10px}
+  .info-item strong{color:var(--text)}
+  .blue-info{border-color:var(--blue);background:#0b1420;border-radius:7px;padding:11px;color:#bcd8f3;font-size:12px;line-height:1.5}
+  .save-indicator{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .save-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px rgba(49,209,124,.7)}
+  .footer{padding:22px 0 8px;color:#626d7f;text-align:center;font-size:11px}
+  .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:50;display:none;place-items:center;padding:20px}
+  .modal-backdrop.open{display:grid}
+  .modal{width:min(620px,100%);border:1px solid var(--line2);background:#0b0f15;border-radius:10px;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+  .modal-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .modal-head h3{margin:0;font-size:16px}.modal-body{padding:17px}
+  .xbtn{background:transparent;border:0;color:var(--muted);font-size:22px;cursor:pointer}
+  .backup-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .hidden-file{display:none}
+
+  /* iPhone / phone-friendly layout */
+  @media(max-width:600px){
+    html,body{overflow-x:hidden}
+    body{-webkit-text-size-adjust:100%}
+    .app{
+      max-width:none;
+      padding:12px max(12px,env(safe-area-inset-right)) calc(18px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));
+    }
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      margin:-12px -12px 12px;
+      padding:calc(9px + env(safe-area-inset-top)) 12px 9px;
+      background:rgba(9,11,15,.97);
+      border-bottom:1px solid var(--line2);
+    }
+    .brandrow{gap:8px;flex-wrap:nowrap}
+    .brand{min-width:0}
+    .brand h1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand p,.save-indicator{display:none}
+    #settingsBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
+    .phase-tabs{
+      flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
+      margin:9px -2px 0;padding:0 2px 2px;gap:7px;
+    }
+    .phase-tabs::-webkit-scrollbar{display:none}
+    .phase-tab{flex:0 0 auto;min-height:42px;padding:8px 12px;font-size:12px}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .card{border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.24)}
+    .card-body{padding:13px}
+    .card-head{padding:13px}
+    .phase-title{font-size:28px;margin-top:5px}
+    .week-note{font-size:12px;line-height:1.4}
+    .nav-group{margin-top:14px}
+    #workoutView .segmented{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    #workoutView .seg-btn{width:100%;min-height:46px;padding:8px 7px;font-size:11px;line-height:1.2}
+    .workout-meta{align-items:stretch;margin-top:14px;padding-top:13px}
+    .workout-title{font-size:26px}
+    .date-field{width:100%;min-width:0}
+    input,textarea,select{font-size:16px;padding:11px 10px}
+    button{touch-action:manipulation}
+    .phase-tab,.seg-btn,.ghost-btn,.danger-btn{min-height:44px}
+    .tm-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .tm-box{padding:10px}
+    .tm-box input{font-size:18px;min-height:48px}
+    .mainlift,.accessories,.notes{margin-top:16px}
+    .prescription-list{gap:9px}
+    .prescription{padding:12px 11px}
+    .prescription-head{gap:8px;flex-wrap:wrap}
+    .prescription-head>div:first-child{min-width:0;flex:1 1 220px}
+    .rx-title{font-size:18px}
+    .rx-weight-card{display:flex;width:100%;min-width:0;padding:9px 11px;margin-top:8px}
+    .weight-label{font-size:10px}
+    .recommended-weight{font-size:27px}
+    .target-copy{font-size:12px;line-height:1.3}
+    .badge{font-size:10px;padding:5px 7px}
+    .badge.pr{font-size:12px}
+    .rep-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+    .repbox{width:auto;min-width:0}
+    .repbox span{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .repbox input{min-height:50px;font-size:19px;padding:8px 4px}
+    .e1rm{font-size:12px;line-height:1.4}
+    .acc-row{
+      display:grid;
+      grid-template-columns:34px minmax(0,1fr) minmax(0,1fr);
+      grid-template-areas:
+        "check name name"
+        ". prescription load"
+        ". reps reps";
+      gap:8px;padding:10px;align-items:start;
+    }
+    .acc-row>.check{grid-area:check;margin-top:25px;width:24px;height:24px}
+    .acc-row>.acc-name{grid-area:name!important;min-width:0}
+    .acc-row>.acc-rx{grid-area:prescription;min-width:0}
+    .acc-row>.acc-load{grid-area:load;min-width:0}
+    .acc-row>.acc-reps{grid-area:reps;min-width:0}
+    .field-cap{font-size:8px;margin-bottom:4px}
+    .progress-wrap{margin-top:12px}
+    textarea{min-height:180px}
+    aside{gap:12px!important}
+    .footer{padding:18px 0 4px;font-size:10px;line-height:1.4}
+    .modal-backdrop{padding:calc(12px + env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom))}
+    .modal{max-height:calc(100vh - 24px);overflow:auto}
+  }
+  @media(max-width:360px){
+    .tm-grid{grid-template-columns:1fr}
+    #workoutView .segmented{grid-template-columns:1fr}
+    .rep-inputs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+
+  .install-tip{
+    display:none;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:45;
+    max-width:520px;margin:0 auto;border:1px solid #355b82;background:rgba(8,18,30,.97);
+    border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.55);padding:12px 42px 12px 13px;
+    color:#d7eaff;font-size:13px;line-height:1.4;backdrop-filter:blur(12px);
+  }
+  .install-tip.show{display:block}
+  .install-tip strong{color:#fff}
+  .install-tip button{position:absolute;right:8px;top:7px;border:0;background:transparent;color:#9fc8ef;font-size:23px;line-height:1;min-height:auto;padding:4px;cursor:pointer}
+  @media(display-mode:standalone){.install-tip{display:none!important}.topbar{padding-top:calc(9px + env(safe-area-inset-top))}}
+
+  @media print{
+    .topbar,.phase-tabs,.nav-group,.tm-actions,.backup-actions,.danger-btn,.ghost-btn,.xbtn{display:none!important}
+    body{background:white;color:black}.app{max-width:none}.card,.prescription,.acc-row{box-shadow:none;background:white;color:black;border-color:#bbb}
+    input,textarea{color:black;background:white;border-color:#bbb}.grid{grid-template-columns:1fr}.muted,.subtle,.rx-weight{color:#555}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brandrow">
+      <div class="brand">
+        <h1>THE JUGGERNAUT METHOD</h1>
+        <p>4 phases · 4 weeks each · Bench / Squat / Overhead Press / Deadlift</p>
+      </div>
+      <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+        <div class="save-indicator"><span class="save-dot"></span> Auto-saved locally</div>
+        <button class="ghost-btn small" id="settingsBtn">Settings / Backup</button>
+      </div>
+    </div>
+    <nav class="phase-tabs" id="phaseTabs"></nav>
+  </header>
+
+  <main class="grid">
+    <section>
+      <div class="card">
+        <div class="card-body" id="workoutView"></div>
+      </div>
+    </section>
+
+    <aside style="display:grid;gap:18px">
+      <div class="card">
+        <div class="card-head"><h3>Training Maxes</h3><span class="subtle" id="tmPhaseLabel"></span></div>
+        <div class="card-body">
+          <div class="tm-grid" id="tmGrid"></div>
+          <div class="tm-actions">
+            <button class="ghost-btn small" id="copyTmBtn">Copy previous phase</button>
+            <button class="ghost-btn small" id="clearTmBtn">Clear phase TMs</button>
+          </div>
+          <p class="subtle" style="margin:10px 0 0">Calculated working weights use your selected rounding increment.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h3>How the tracker marks progress</h3></div>
+        <div class="card-body">
+          <div class="info-list">
+            <div class="info-item"><strong>Green highlight:</strong> you met every rep target in that prescription block.</div>
+            <div class="info-item"><strong>Blue PR:</strong> an AMRAP produced a higher estimated 1RM than another AMRAP you have logged for that lift.</div>
+            <div class="info-item"><strong>Baseline:</strong> the first AMRAP logged for a lift. It becomes the number future AMRAPs can beat.</div>
+            <div class="info-item"><strong>Accessories:</strong> each workout has five. Names and prescriptions are editable, so you can swap movements whenever you want.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="blue-info">
+        <strong>AMRAP note:</strong> the “+” set still follows the phase guidance from your chart: Week 1 leave 2–3 reps, Week 2 leave 1–2 reps, Week 3 leave 0 reps, Week 4 has no + set.
+      </div>
+    </aside>
+  </main>
+  <div class="footer">Single-file offline tracker · Your entries stay in this browser unless you export a backup.</div>
+</div>
+
+<div class="install-tip" id="installTip" role="status">
+  <button id="dismissInstallTip" aria-label="Dismiss">×</button>
+  <strong>Add to your iPhone Home Screen:</strong> open this page in Safari, tap the Share button, then choose <strong>Add to Home Screen</strong>. It will open full-screen like an app.
+</div>
+
+<div class="modal-backdrop" id="settingsModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-head">
+      <h3 id="settingsTitle">Settings & Backup</h3>
+      <button class="xbtn" id="closeModal" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <label class="tiny" for="roundingSelect">Round calculated weights to</label>
+      <select id="roundingSelect" style="margin-top:6px">
+        <option value="5">Nearest 5 lb</option>
+        <option value="2.5">Nearest 2.5 lb</option>
+        <option value="1">Nearest 1 lb</option>
+        <option value="0">Do not round</option>
+      </select>
+      <div class="backup-actions">
+        <button class="ghost-btn" id="exportBtn">Export backup</button>
+        <button class="ghost-btn" id="importBtn">Import backup</button>
+        <input class="hidden-file" type="file" id="importFile" accept="application/json,.json" />
+      </div>
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+        <button class="danger-btn" id="resetAllBtn">Reset all tracker data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const STORAGE_KEY = 'juggernautTracker_v2';
+
+  const lifts = [
+    { id:'bench', name:'Bench Press', day:'Day 1', short:'Bench' },
+    { id:'squat', name:'Squat', day:'Day 2', short:'Squat' },
+    { id:'ohp', name:'Overhead Press', day:'Day 3', short:'OHP' },
+    { id:'deadlift', name:'Deadlift', day:'Day 4', short:'Deadlift' }
+  ];
+
+  const accessoryDefaults = {
+    bench: [
+      ['Overhead Tricep Extension','3 × 10–15'],
+      ['Machine Chest Fly','3 × 10–15'],
+      ['Machine Shoulder Press','3 × 8–12'],
+      ['Reverse Flye','3 × 12–20'],
+      ['Hanging Leg Raises','3 × 8–15']
+    ],
+    squat: [
+      ['Seated Leg Curl','3 × 10–15'],
+      ['Leg Press','3 × 8–15'],
+      ['Hip Thrust','3 × 8–12'],
+      ['Cable Flexion Row','3 × 10–15'],
+      ['Chest Supported Rows','3 × 8–12']
+    ],
+    ohp: [
+      ['Cable Lateral Raise','3 × 12–20'],
+      ['Dips','3 × 6–12'],
+      ['Lat Pulldown','3 × 8–12'],
+      ['Cable Triceps Pressdown','3 × 10–15'],
+      ['Hanging Leg Raises','3 × 8–15']
+    ],
+    deadlift: [
+      ['Lying Leg Curl','3 × 10–15'],
+      ['Leg Extension','3 × 10–15'],
+      ['Hip Abduction','3 × 12–20'],
+      ['Lat Pulldowns','3 × 8–12'],
+      ['High Rows','3 × 8–12']
+    ]
+  };
+
+  const phases = [
+    {
+      id:'10s', label:'10s Phase', month:'Month 1',
+      weeks:[
+        {name:'Accumulation', rir:'Leave 2–3 reps left on + set', rx:[
+          {pct:60,sets:4,reps:10}, {pct:60,sets:1,reps:10,amrap:true}
+        ]},
+        {name:'Intensification', rir:'Leave 1–2 reps left on + set', rx:[
+          {pct:55,sets:1,reps:5}, {pct:62.5,sets:1,reps:5}, {pct:67.5,sets:2,reps:10}, {pct:67.5,sets:1,reps:10,amrap:true}
+        ]},
+        {name:'Realization', rir:'Leave 0 reps left on + set', rx:[
+          {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:3}, {pct:70,sets:1,reps:1}, {pct:75,sets:1,reps:10,amrap:true}
+        ]},
+        {name:'Deload', rir:'No + sets', rx:[
+          {pct:40,sets:1,reps:5}, {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:5}
+        ]}
+      ]
+    },
+    {
+      id:'8s', label:'8s Phase', month:'Month 2',
+      weeks:[
+        {name:'Accumulation', rir:'Leave 2–3 reps left on + set', rx:[
+          {pct:65,sets:4,reps:8}, {pct:65,sets:1,reps:8,amrap:true}
+        ]},
+        {name:'Intensification', rir:'Leave 1–2 reps left on + set', rx:[
+          {pct:60,sets:1,reps:3}, {pct:67.5,sets:1,reps:3}, {pct:72.5,sets:3,reps:7}, {pct:72.5,sets:1,reps:3,amrap:true}
+        ]},
+        {name:'Realization', rir:'Leave 0 reps left on + set', rx:[
+          {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:3}, {pct:70,sets:1,reps:2}, {pct:75,sets:1,reps:1}, {pct:80,sets:1,reps:8,amrap:true}
+        ]},
+        {name:'Deload', rir:'No + sets', rx:[
+          {pct:40,sets:1,reps:5}, {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:5}
+        ]}
+      ]
+    },
+    {
+      id:'5s', label:'5s Phase', month:'Month 3',
+      weeks:[
+        {name:'Accumulation', rir:'Leave 2–3 reps left on + set', rx:[
+          {pct:70,sets:5,reps:5}, {pct:70,sets:1,reps:5,amrap:true}
+        ]},
+        {name:'Intensification', rir:'Leave 1–2 reps left on + set', rx:[
+          {pct:65,sets:1,reps:2}, {pct:72.5,sets:1,reps:2}, {pct:77.5,sets:4,reps:4}, {pct:77.5,sets:1,reps:4,amrap:true}
+        ]},
+        {name:'Realization', rir:'Leave 0 reps left on + set', rx:[
+          {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:3}, {pct:70,sets:1,reps:2}, {pct:75,sets:1,reps:1}, {pct:80,sets:1,reps:1}, {pct:85,sets:1,reps:5,amrap:true}
+        ]},
+        {name:'Deload', rir:'No + sets', rx:[
+          {pct:40,sets:1,reps:5}, {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:5}
+        ]}
+      ]
+    },
+    {
+      id:'3s', label:'3s Phase', month:'Month 4',
+      weeks:[
+        {name:'Accumulation', rir:'Leave 2–3 reps left on + set', rx:[
+          {pct:75,sets:6,reps:3}, {pct:75,sets:1,reps:3,amrap:true}
+        ]},
+        {name:'Intensification', rir:'Leave 1–2 reps left on + set', rx:[
+          {pct:70,sets:1,reps:1}, {pct:77.5,sets:1,reps:1}, {pct:82.5,sets:4,reps:3}, {pct:82.5,sets:1,reps:3,amrap:true}
+        ]},
+        {name:'Realization', rir:'Leave 0 reps left on + set', rx:[
+          {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:3}, {pct:70,sets:1,reps:2}, {pct:75,sets:1,reps:1}, {pct:80,sets:1,reps:1}, {pct:85,sets:1,reps:1}, {pct:90,sets:1,reps:3,amrap:true}
+        ]},
+        {name:'Deload', rir:'No + sets', rx:[
+          {pct:40,sets:1,reps:5}, {pct:50,sets:1,reps:5}, {pct:60,sets:1,reps:5}
+        ]}
+      ]
+    }
+  ];
+
+  function blankState(){
+    const s = {
+      version:2,
+      rounding:5,
+      active:{ phase:'10s', week:0, lift:'bench' },
+      trainingMax:{},
+      workouts:{}
+    };
+    phases.forEach(p => {
+      s.trainingMax[p.id] = {};
+      lifts.forEach(l => s.trainingMax[p.id][l.id] = '');
+    });
+    return s;
+  }
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return blankState();
+      const parsed = JSON.parse(raw);
+      return hydrateState(parsed);
+    }catch(e){ return blankState(); }
+  }
+
+  function hydrateState(incoming){
+    const base = blankState();
+    if(!incoming || typeof incoming !== 'object') return base;
+    base.rounding = incoming.rounding ?? base.rounding;
+    if(incoming.active) base.active = {...base.active, ...incoming.active};
+    phases.forEach(p => lifts.forEach(l => {
+      if(incoming.trainingMax?.[p.id]?.[l.id] !== undefined) base.trainingMax[p.id][l.id] = incoming.trainingMax[p.id][l.id];
+    }));
+    base.workouts = incoming.workouts && typeof incoming.workouts === 'object' ? incoming.workouts : {};
+    return base;
+  }
+
+  let state = loadState();
+
+  const $ = sel => document.querySelector(sel);
+  const phaseTabs = $('#phaseTabs');
+  const workoutView = $('#workoutView');
+  const tmGrid = $('#tmGrid');
+  const tmPhaseLabel = $('#tmPhaseLabel');
+
+  function save(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function currentPhase(){ return phases.find(p => p.id === state.active.phase) || phases[0]; }
+  function currentLift(){ return lifts.find(l => l.id === state.active.lift) || lifts[0]; }
+  function workoutKey(phaseId, weekIndex, liftId){ return `${phaseId}|w${weekIndex+1}|${liftId}`; }
+
+  function ensureWorkout(phaseId, weekIndex, liftId){
+    const key = workoutKey(phaseId, weekIndex, liftId);
+    if(!state.workouts[key]){
+      state.workouts[key] = {
+        date:'', notes:'', main:{}, accessories: accessoryDefaults[liftId].map(([name,rx]) => ({name,rx,load:'',reps:'',done:false}))
+      };
+    }
+    const w = state.workouts[key];
+    if(!Array.isArray(w.accessories)) w.accessories = [];
+    while(w.accessories.length < 5){
+      const fallback = accessoryDefaults[liftId][w.accessories.length] || [`Accessory ${w.accessories.length+1}`,'3 × 8–12'];
+      w.accessories.push({name:fallback[0],rx:fallback[1],load:'',reps:'',done:false});
+    }
+    w.accessories = w.accessories.slice(0,5);
+    if(!w.main || typeof w.main !== 'object') w.main = {};
+    return w;
+  }
+
+  function formatPct(n){ return Number.isInteger(n) ? `${n}%` : `${n}%`; }
+  function roundWeight(weight){
+    const inc = Number(state.rounding);
+    if(!inc) return Math.round(weight*100)/100;
+    return Math.round(weight/inc)*inc;
+  }
+  function calcWeight(tm,pct){
+    const n = Number(tm);
+    if(!Number.isFinite(n) || n <= 0) return null;
+    return roundWeight(n * pct / 100);
+  }
+  function formatWeight(w){
+    if(w === null) return 'Set a training max';
+    return `${Number.isInteger(w) ? w : w.toFixed(1)} lb`;
+  }
+  function epley(weight,reps){
+    const w = Number(weight), r = Number(reps);
+    if(!Number.isFinite(w) || !Number.isFinite(r) || w <= 0 || r <= 0) return null;
+    return w * (1 + r/30);
+  }
+
+  function allAmrapResultsForLift(liftId, excludeKey=null){
+    const out=[];
+    phases.forEach(p => p.weeks.forEach((wk,wi) => {
+      const tm = state.trainingMax[p.id][liftId];
+      wk.rx.forEach((rx,ri) => {
+        if(!rx.amrap) return;
+        const wkKey = workoutKey(p.id,wi,liftId);
+        const entry = state.workouts[wkKey]?.main?.[ri]?.reps?.[0];
+        const reps = Number(entry);
+        const weight = calcWeight(tm,rx.pct);
+        const e = epley(weight,reps);
+        const id = `${wkKey}|rx${ri}`;
+        if(id !== excludeKey && e !== null) out.push({id,e,reps,weight});
+      });
+    }));
+    return out;
+  }
+
+  function renderPhaseTabs(){
+    phaseTabs.innerHTML = phases.map(p => `<button class="phase-tab ${p.id===state.active.phase?'active':''}" data-phase="${p.id}">${p.label}</button>`).join('');
+    phaseTabs.querySelectorAll('[data-phase]').forEach(btn => btn.addEventListener('click',()=>{
+      state.active.phase = btn.dataset.phase;
+      state.active.week = 0;
+      location.hash = `phase-${state.active.phase}`;
+      save(); render();
+    }));
+  }
+
+  function renderTrainingMaxes(){
+    const p = currentPhase();
+    tmPhaseLabel.textContent = p.label;
+    tmGrid.innerHTML = lifts.map(l => `
+      <div class="tm-box">
+        <div class="tm-name">${l.name}</div>
+        <input inputmode="decimal" type="number" min="0" step="2.5" placeholder="TM (lb)" data-tm="${l.id}" value="${escapeAttr(state.trainingMax[p.id][l.id])}">
+      </div>`).join('');
+    tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('input',()=>{
+      state.trainingMax[p.id][inp.dataset.tm] = inp.value;
+      save();
+    }));
+    tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
+  }
+
+  function renderWorkout(){
+    const p = currentPhase();
+    const wi = Math.max(0, Math.min(3, Number(state.active.week)||0));
+    state.active.week = wi;
+    const week = p.weeks[wi];
+    const lift = currentLift();
+    const w = ensureWorkout(p.id,wi,lift.id);
+    const tm = state.trainingMax[p.id][lift.id];
+
+    const rxHtml = week.rx.map((rx,ri) => renderPrescription(p,wi,lift,rx,ri,w,tm)).join('');
+    const accHtml = w.accessories.map((a,ai) => renderAccessory(a,ai)).join('');
+
+    workoutView.innerHTML = `
+      <div>
+        <div class="kicker">${p.month}</div>
+        <div class="phase-title">${p.label}</div>
+        <div class="week-note">Week ${wi+1}: ${week.name} · ${week.rir}</div>
+
+        <div class="nav-group">
+          <span class="nav-label">Week</span>
+          <div class="segmented">
+            ${p.weeks.map((x,i)=>`<button class="seg-btn ${i===wi?'active':''}" data-week="${i}">W${i+1} · ${x.name}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="nav-group">
+          <span class="nav-label">Workout</span>
+          <div class="segmented">
+            ${lifts.map(l=>`<button class="seg-btn ${l.id===lift.id?'active':''}" data-lift="${l.id}">${l.day} · ${l.short}</button>`).join('')}
+          </div>
+        </div>
+
+        <div class="workout-meta">
+          <div>
+            <div class="workout-title">${lift.name}</div>
+            <div class="day-label">${lift.day} · Week ${wi+1} ${week.name}</div>
+          </div>
+          <div class="date-field">
+            <label class="tiny">Workout date</label>
+            <input type="date" id="workoutDate" value="${escapeAttr(w.date||'')}">
+          </div>
+        </div>
+
+        <div class="mainlift">
+          <div class="card-head" style="padding-left:0;padding-right:0;border-bottom:0">
+            <h2>Main lift prescription</h2>
+            <span class="subtle">TM: ${tm ? `${escapeHtml(tm)} lb` : 'not set'}</span>
+          </div>
+          <div class="prescription-list">${rxHtml}</div>
+          <div class="progress-wrap">
+            <div class="progress-line"><span>Main lift progress</span><span id="mainProgressText"></span></div>
+            <div class="progress"><div id="mainProgressBar"></div></div>
+          </div>
+        </div>
+
+        <div class="accessories">
+          <div class="card-head" style="padding-left:0;padding-right:0;border-bottom:0">
+            <h2>Accessories · 5 movements</h2>
+            <span class="subtle">Editable</span>
+          </div>
+          <div class="accessory-list">${accHtml}</div>
+          <div class="progress-wrap">
+            <div class="progress-line"><span>Accessory progress</span><span id="accProgressText"></span></div>
+            <div class="progress"><div id="accProgressBar"></div></div>
+          </div>
+        </div>
+
+        <div class="notes">
+          <div class="card-head" style="padding-left:0;padding-right:0;border-bottom:0">
+            <h2>Workout notes</h2>
+          </div>
+          <textarea id="notesBox" placeholder="How did the workout feel? Technique cues, pain, energy, sleep, rest times, accessory swaps, next-session notes…">${escapeHtml(w.notes||'')}</textarea>
+        </div>
+      </div>`;
+
+    workoutView.querySelectorAll('[data-week]').forEach(btn => btn.addEventListener('click',()=>{
+      state.active.week = Number(btn.dataset.week); save(); renderWorkout();
+    }));
+    workoutView.querySelectorAll('[data-lift]').forEach(btn => btn.addEventListener('click',()=>{
+      state.active.lift = btn.dataset.lift; save(); renderWorkout();
+    }));
+    $('#workoutDate').addEventListener('input',e=>{ w.date=e.target.value; save(); });
+    $('#notesBox').addEventListener('input',e=>{ w.notes=e.target.value; save(); });
+
+    workoutView.querySelectorAll('[data-rep-input]').forEach(inp => inp.addEventListener('input',()=>{
+      const ri = Number(inp.dataset.rxIndex), si = Number(inp.dataset.setIndex);
+      if(!w.main[ri]) w.main[ri]={reps:[]};
+      if(!Array.isArray(w.main[ri].reps)) w.main[ri].reps=[];
+      w.main[ri].reps[si]=inp.value;
+      save();
+      updateProgress(p,wi,lift,w);
+    }));
+    workoutView.querySelectorAll('[data-rep-input]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
+
+    workoutView.querySelectorAll('[data-acc-field]').forEach(inp => inp.addEventListener('input',()=>{
+      const ai = Number(inp.dataset.accIndex), field=inp.dataset.accField;
+      w.accessories[ai][field]=inp.value; save();
+    }));
+    workoutView.querySelectorAll('[data-acc-done]').forEach(chk => chk.addEventListener('change',()=>{
+      const ai=Number(chk.dataset.accDone); w.accessories[ai].done=chk.checked; save(); renderWorkout();
+    }));
+
+    updateProgress(p,wi,lift,w);
+  }
+
+  function renderPrescription(p,wi,lift,rx,ri,w,tm){
+    const saved = w.main[ri] || {reps:[]};
+    const repsArr = Array.isArray(saved.reps) ? saved.reps : [];
+    const met = Array.from({length:rx.sets},(_,si)=> Number(repsArr[si]) >= rx.reps && repsArr[si] !== '').every(Boolean);
+    const weight = calcWeight(tm,rx.pct);
+    const rxId = `${workoutKey(p.id,wi,lift.id)}|rx${ri}`;
+    let prClass='', badge='';
+    let e1rmLine='';
+    if(rx.amrap){
+      const reps = Number(repsArr[0]);
+      const currentE = epley(weight,reps);
+      const others = allAmrapResultsForLift(lift.id,rxId);
+      if(currentE !== null){
+        if(others.length===0){
+          badge = `<span class="badge baseline">BASELINE</span>`;
+          e1rmLine = `<div class="e1rm">Estimated 1RM: ${Math.round(currentE)} lb · first AMRAP baseline for ${lift.short}</div>`;
+        } else {
+          const bestOther = Math.max(...others.map(x=>x.e));
+          if(currentE > bestOther + 0.001){
+            prClass='pr'; badge=`<span class="badge pr">! PR</span>`;
+            e1rmLine = `<div class="e1rm">Estimated 1RM: ${Math.round(currentE)} lb · previous best ${Math.round(bestOther)} lb</div>`;
+          } else {
+            e1rmLine = `<div class="e1rm">Estimated 1RM: ${Math.round(currentE)} lb · best logged ${Math.round(Math.max(bestOther,currentE))} lb</div>`;
+          }
+        }
+      }
+    }
+    if(!badge && met) badge = `<span class="badge done">TARGET MET</span>`;
+    if(rx.amrap && !badge) badge = `<span class="badge amrap">AMRAP +</span>`;
+
+    const setInputs = Array.from({length:rx.sets},(_,si)=>`
+      <label class="repbox">
+        <span>${rx.amrap ? 'AMRAP reps' : `Set ${si+1}`}</span>
+        <input type="number" min="0" step="1" inputmode="numeric" placeholder="${rx.reps}" value="${escapeAttr(repsArr[si] ?? '')}" data-rep-input data-rx-index="${ri}" data-set-index="${si}">
+      </label>`).join('');
+
+    return `<div class="prescription ${met?'complete':''} ${prClass}">
+      <div class="prescription-head">
+        <div>
+          <div class="rx-title">${formatPct(rx.pct)} × ${rx.sets} × ${rx.reps}${rx.amrap?'+':''}</div>
+          <div class="rx-weight-card">
+            <span class="weight-label">Recommended weight</span>
+            <strong class="recommended-weight">${formatWeight(weight)}</strong>
+            <span class="target-copy">Target ${rx.reps}${rx.amrap?' or more':''} rep${rx.reps===1?'':'s'} per set</span>
+          </div>
+        </div>
+        ${badge}
+      </div>
+      <div class="rep-inputs">${setInputs}</div>
+      ${e1rmLine}
+    </div>`;
+  }
+
+  function renderAccessory(a,ai){
+    return `<div class="acc-row ${a.done?'done':''}">
+      <input class="check" type="checkbox" ${a.done?'checked':''} data-acc-done="${ai}" aria-label="Mark accessory complete">
+      <div class="acc-name">
+        <div class="field-cap">Exercise</div>
+        <input value="${escapeAttr(a.name||'')}" data-acc-field="name" data-acc-index="${ai}">
+      </div>
+      <div class="acc-rx">
+        <div class="field-cap">Prescription</div>
+        <input value="${escapeAttr(a.rx||'')}" data-acc-field="rx" data-acc-index="${ai}">
+      </div>
+      <div class="acc-load">
+        <div class="field-cap">Load</div>
+        <input placeholder="lb" value="${escapeAttr(a.load||'')}" data-acc-field="load" data-acc-index="${ai}">
+      </div>
+      <div class="acc-reps">
+        <div class="field-cap">Reps completed</div>
+        <input placeholder="e.g. 12,12,10" value="${escapeAttr(a.reps||'')}" data-acc-field="reps" data-acc-index="${ai}">
+      </div>
+    </div>`;
+  }
+
+  function updateProgress(p,wi,lift,w){
+    const week=p.weeks[wi];
+    let done=0;
+    week.rx.forEach((rx,ri)=>{
+      const reps=w.main[ri]?.reps || [];
+      const met=Array.from({length:rx.sets},(_,si)=> Number(reps[si])>=rx.reps && reps[si] !== '').every(Boolean);
+      if(met) done++;
+    });
+    const total=week.rx.length;
+    const pct=total?Math.round(done/total*100):0;
+    $('#mainProgressText').textContent=`${done}/${total} blocks`;
+    $('#mainProgressBar').style.width=`${pct}%`;
+    const accDone=w.accessories.filter(a=>a.done).length;
+    $('#accProgressText').textContent=`${accDone}/5 movements`;
+    $('#accProgressBar').style.width=`${accDone/5*100}%`;
+  }
+
+  function copyPreviousPhase(){
+    const idx=phases.findIndex(p=>p.id===state.active.phase);
+    if(idx<=0){ alert('This is the first phase, so there is no previous phase to copy from.'); return; }
+    const prev=phases[idx-1].id, cur=state.active.phase;
+    lifts.forEach(l=>state.trainingMax[cur][l.id]=state.trainingMax[prev][l.id]);
+    save(); renderTrainingMaxes(); renderWorkout();
+  }
+
+  function escapeHtml(value){
+    return String(value ?? '').replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+  function escapeAttr(value){ return escapeHtml(value); }
+
+  function render(){
+    renderPhaseTabs(); renderTrainingMaxes(); renderWorkout();
+    $('#roundingSelect').value=String(state.rounding);
+    document.title=`${currentPhase().label} · Juggernaut Tracker`;
+  }
+
+  // Hash support makes each phase behave like its own page within the file.
+  const hashMatch = location.hash.match(/^#phase-(10s|8s|5s|3s)$/);
+  if(hashMatch) state.active.phase = hashMatch[1];
+
+  $('#copyTmBtn').addEventListener('click',copyPreviousPhase);
+  $('#clearTmBtn').addEventListener('click',()=>{
+    if(!confirm(`Clear all training maxes for ${currentPhase().label}?`)) return;
+    lifts.forEach(l=>state.trainingMax[state.active.phase][l.id]=''); save(); renderTrainingMaxes(); renderWorkout();
+  });
+
+  const modal=$('#settingsModal');
+  $('#settingsBtn').addEventListener('click',()=>{modal.classList.add('open');modal.setAttribute('aria-hidden','false')});
+  $('#closeModal').addEventListener('click',()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true')});
+  modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') modal.classList.remove('open')});
+
+  $('#roundingSelect').addEventListener('change',e=>{state.rounding=Number(e.target.value);save();renderWorkout()});
+
+  $('#exportBtn').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='juggernaut-tracker-backup.json';a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+  $('#importBtn').addEventListener('click',()=>$('#importFile').click());
+  $('#importFile').addEventListener('change',async e=>{
+    const file=e.target.files?.[0]; if(!file) return;
+    try{
+      const parsed=JSON.parse(await file.text());
+      state=hydrateState(parsed); save(); render();
+      alert('Backup imported successfully.');
+      modal.classList.remove('open');
+    }catch(err){ alert('That file could not be imported. Please choose a valid tracker JSON backup.'); }
+    e.target.value='';
+  });
+  $('#resetAllBtn').addEventListener('click',()=>{
+    if(!confirm('Reset ALL training maxes, reps, accessories, dates, and notes? This cannot be undone unless you exported a backup.')) return;
+    state=blankState();save();location.hash='phase-10s';render();modal.classList.remove('open');
+  });
+
+  window.addEventListener('hashchange',()=>{
+    const m=location.hash.match(/^#phase-(10s|8s|5s|3s)$/);
+    if(m && m[1]!==state.active.phase){state.active.phase=m[1];state.active.week=0;save();render();}
+  });
+
+  // iPhone Home Screen install helper.
+  const standalone = window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const installTip = $('#installTip');
+  if(isiOS && !standalone && localStorage.getItem('juggernautInstallTipDismissed') !== '1'){
+    installTip?.classList.add('show');
+  }
+  $('#dismissInstallTip')?.addEventListener('click',()=>{
+    installTip?.classList.remove('show');
+    localStorage.setItem('juggernautInstallTipDismissed','1');
+  });
+
+  // Cache the app shell for offline use after the first hosted visit.
+  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+    window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
