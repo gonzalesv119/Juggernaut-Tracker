@@ -27,6 +27,9 @@
     --blue:#53a7ff;
     --blue-bg:#0c2340;
     --yellow:#f3c969;
+    --gold:#f3c969;
+    --gold-bg:#241c0a;
+    --gold-line:#8a6d2f;
     --red:#ff6b6b;
     --shadow:0 12px 28px rgba(0,0,0,.28);
     --radius:10px;
@@ -75,6 +78,13 @@
     border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
   }
   .card-head{padding:16px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  #tmDetails summary{cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent;border-bottom:1px solid transparent}
+  #tmDetails summary::-webkit-details-marker{display:none}
+  #tmDetails summary::marker{content:''}
+  #tmDetails[open] summary{border-bottom-color:var(--line)}
+  #tmDetails summary:hover{background:#0e131a}
+  .tm-chevron{flex:0 0 auto;color:var(--muted);font-size:16px;transition:transform .15s ease}
+  #tmDetails[open] .tm-chevron{transform:rotate(180deg)}
   .card-head h2,.card-head h3{margin:0;font-size:16px;letter-spacing:.015em}
   .card-body{padding:17px}
   .kicker{text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--muted);font-weight:800}
@@ -95,7 +105,6 @@
     border-radius:6px;padding:9px 10px;outline:none;
   }
   input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(83,167,255,.12)}
-  input[type="number"]{appearance:textfield}
   .tm-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
   @media(max-width:360px){.tm-grid{grid-template-columns:1fr}}
   .tm-box{border:1px solid var(--line);background:var(--panel2);padding:12px;border-radius:7px}
@@ -109,7 +118,7 @@
     transition:.15s ease;position:relative;
   }
   .prescription.complete{border-color:rgba(49,209,124,.65);background:var(--green-bg)}
-  .prescription.pr{border-color:var(--blue);background:linear-gradient(180deg,var(--blue-bg),#0d192a);box-shadow:0 0 0 1px rgba(83,167,255,.15) inset}
+  .prescription.pr{border-color:var(--gold-line);background:linear-gradient(180deg,var(--gold-bg),#170f06);box-shadow:0 0 0 1px rgba(243,201,105,.18) inset}
   .prescription-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
   .rx-title{font-size:17px;font-weight:850}
   .complete .rx-title{text-decoration:none}
@@ -125,13 +134,14 @@
   .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:5px 8px;font-size:11px;font-weight:900;letter-spacing:.04em}
   .badge.amrap{color:var(--yellow);border-color:#66572d;background:#211c0d}
   .badge.done{color:#a9f4cc;border-color:#256e4b;background:#0b2a1d}
-  .badge.pr{color:#cce6ff;border-color:#2f76c0;background:#0a2b4f;font-size:12px}
+  .badge.pr{color:#ffe9b3;border-color:var(--gold-line);background:var(--gold-bg);font-size:12px}
   .badge.baseline{color:#b7d8f8;border-color:#36526f;background:#111d2a}
   .rep-inputs{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
   .repbox{width:80px}
   .repbox span{display:block;font-size:10px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
   .repbox input{text-align:center;font-weight:800}
   .e1rm{margin-top:9px;color:#b8d9ff;font-size:12px}
+  .prescription.pr .e1rm{color:#ffdf9e}
   .accessories{margin-top:18px}
   .accessory-list{display:grid;gap:8px}
   .acc-row{
@@ -458,24 +468,32 @@
     </section>
 
     <aside id="trackerSidebar" style="display:grid;gap:18px">
-      <div class="card">
-        <div class="card-head"><h3>Training Maxes</h3><span class="subtle" id="tmPhaseLabel"></span></div>
+      <details class="card" id="tmDetails">
+        <summary class="card-head">
+          <div style="min-width:0">
+            <h3>Training Maxes</h3>
+            <div class="subtle" id="tmPhaseLabel"></div>
+            <div class="subtle" id="tmSummary" style="margin-top:3px"></div>
+          </div>
+          <span class="tm-chevron" aria-hidden="true">▾</span>
+        </summary>
         <div class="card-body">
           <div class="tm-grid" id="tmGrid"></div>
           <div class="tm-actions">
             <button class="ghost-btn small" id="copyTmBtn">Copy previous phase</button>
+            <button class="ghost-btn small" id="autofillTmBtn">Autofill from Wk3 AMRAP</button>
             <button class="ghost-btn small" id="clearTmBtn">Clear phase TMs</button>
           </div>
-          <p class="subtle" style="margin:10px 0 0">Calculated working weights use your selected rounding increment.</p>
+          <p class="subtle" style="margin:10px 0 0">Calculated working weights use your selected rounding increment. Autofill sets each lift's training max to the estimated 1RM from the previous phase's Week 3 (Realization) AMRAP set.</p>
         </div>
-      </div>
+      </details>
 
       <div class="card">
         <div class="card-head"><h3>How the tracker marks progress</h3></div>
         <div class="card-body">
           <div class="info-list">
             <div class="info-item"><strong>Green highlight:</strong> you met every rep target in that prescription block.</div>
-            <div class="info-item"><strong>Blue PR:</strong> an AMRAP produced a higher estimated 1RM than another AMRAP you have logged for that lift.</div>
+            <div class="info-item"><strong>Gold PR:</strong> an AMRAP produced a higher estimated 1RM than another AMRAP you have logged for that lift.</div>
             <div class="info-item"><strong>Baseline:</strong> the first AMRAP logged for a lift. It becomes the number future AMRAPs can beat.</div>
             <div class="info-item"><strong>Accessories:</strong> each workout has five. Reps are logged set-by-set, and week-to-week arrows show load/repetition progression for the same exercise.</div>
           </div>
@@ -873,6 +891,16 @@
   }
 
   function formatPct(n){ return Number.isInteger(n) ? `${n}%` : `${n}%`; }
+  function sanitizeNumericInput(el, allowDecimal){
+    const raw = el.value;
+    let cleaned = allowDecimal ? raw.replace(/[^0-9.]/g,'') : raw.replace(/[^0-9]/g,'');
+    if(allowDecimal){
+      const firstDot = cleaned.indexOf('.');
+      if(firstDot !== -1) cleaned = cleaned.slice(0,firstDot+1) + cleaned.slice(firstDot+1).replace(/\./g,'');
+    }
+    if(cleaned !== raw) el.value = cleaned;
+    return cleaned;
+  }
   function roundWeight(weight){
     const inc = Number(state.rounding);
     if(!inc) return Math.round(weight*100)/100;
@@ -1149,19 +1177,35 @@
     });
   }
 
-  function renderTrainingMaxes(){
+  function renderTrainingMaxes(opts={}){
     const p = currentPhase();
     tmPhaseLabel.textContent = p.label;
     tmGrid.innerHTML = lifts.map(l => `
       <div class="tm-box">
         <div class="tm-name">${l.name}</div>
-        <input inputmode="decimal" type="number" min="0" step="2.5" placeholder="TM (lb)" data-tm="${l.id}" value="${escapeAttr(state.trainingMax[p.id][l.id])}">
+        <input type="text" inputmode="decimal" pattern="[0-9]*\.?[0-9]*" placeholder="TM (lb)" data-tm="${l.id}" value="${escapeAttr(state.trainingMax[p.id][l.id])}">
       </div>`).join('');
     tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('input',()=>{
-      state.trainingMax[p.id][inp.dataset.tm] = inp.value;
+      state.trainingMax[p.id][inp.dataset.tm] = sanitizeNumericInput(inp, true);
       save();
+      renderTmSummary();
     }));
     tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
+    renderTmSummary();
+    if(opts.autoToggle){
+      const details = $('#tmDetails');
+      if(details) details.open = !lifts.every(l => Number(state.trainingMax[p.id][l.id]) > 0);
+    }
+  }
+
+  function renderTmSummary(){
+    const p = currentPhase();
+    const el = $('#tmSummary');
+    if(!el) return;
+    el.textContent = lifts.map(l => {
+      const v = state.trainingMax[p.id][l.id];
+      return `${l.short} ${v ? Number(v)+' lb' : '—'}`;
+    }).join(' · ');
   }
 
   function renderWorkout(){
@@ -1253,7 +1297,7 @@
       const ri = Number(inp.dataset.rxIndex), si = Number(inp.dataset.setIndex);
       if(!w.main[ri]) w.main[ri]={reps:[]};
       if(!Array.isArray(w.main[ri].reps)) w.main[ri].reps=[];
-      w.main[ri].reps[si]=inp.value;
+      w.main[ri].reps[si]=sanitizeNumericInput(inp, false);
       save();
       updateProgress(p,wi,lift,w);
     }));
@@ -1271,7 +1315,7 @@
       inp.addEventListener('input',()=>{
         const ai = Number(inp.dataset.accIndex), si = Number(inp.dataset.accSetIndex);
         if(!Array.isArray(w.accessories[ai].reps)) w.accessories[ai].reps = normalizeAccessoryReps(w.accessories[ai].reps);
-        w.accessories[ai].reps[si] = inp.value;
+        w.accessories[ai].reps[si] = sanitizeNumericInput(inp, false);
         save();
       });
       inp.addEventListener('change',()=>renderWorkout());
@@ -1324,7 +1368,7 @@
     const setInputs = Array.from({length:rx.sets},(_,si)=>`
       <label class="repbox">
         <span>${rx.amrap ? 'AMRAP reps' : `Set ${si+1}`}</span>
-        <input type="number" min="0" step="1" inputmode="numeric" placeholder="${rx.reps}" value="${escapeAttr(repsArr[si] ?? '')}" data-rep-input data-rx-index="${ri}" data-set-index="${si}">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="${rx.reps}" value="${escapeAttr(repsArr[si] ?? '')}" data-rep-input data-rx-index="${ri}" data-set-index="${si}">
       </label>`).join('');
 
     return `<div class="prescription ${met?'complete':''} ${prClass}">
@@ -1368,7 +1412,7 @@
     const repInputs = Array.from({length:sets},(_,si)=>`
       <label class="acc-repbox">
         <div class="field-cap">Set ${si+1}</div>
-        <input type="number" min="0" step="1" inputmode="numeric" placeholder="—" value="${escapeAttr(repsArr[si] ?? '')}" data-acc-rep data-acc-index="${ai}" data-acc-set-index="${si}">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" placeholder="—" value="${escapeAttr(repsArr[si] ?? '')}" data-acc-rep data-acc-index="${ai}" data-acc-set-index="${si}">
       </label>`).join('');
 
     const loadText = String(a.load ?? '').trim();
@@ -1428,6 +1472,42 @@
     save(); renderTrainingMaxes(); renderWorkout();
   }
 
+  // Reads the AMRAP set from a phase's Week 3 (Realization) and returns the estimated 1RM,
+  // or null if that phase's TM isn't set or the AMRAP reps haven't been logged yet.
+  function realizationE1RM(phaseId, liftId){
+    const phase = phases.find(p=>p.id===phaseId);
+    if(!phase) return null;
+    const wi = phase.weeks.findIndex(wk=>wk.name==='Realization');
+    if(wi===-1) return null;
+    const week = phase.weeks[wi];
+    const ri = week.rx.findIndex(r=>r.amrap);
+    if(ri===-1) return null;
+    const rx = week.rx[ri];
+    const weight = calcWeight(state.trainingMax[phaseId]?.[liftId], rx.pct);
+    const repsRaw = state.workouts[workoutKey(phaseId,wi,liftId)]?.main?.[ri]?.reps?.[0];
+    if(repsRaw === undefined || repsRaw === '') return null;
+    return epley(weight, Number(repsRaw));
+  }
+
+  function autofillFromRealization(){
+    const idx = phases.findIndex(p=>p.id===state.active.phase);
+    if(idx<=0){ alert("This is the first phase, so there is no previous phase's Week 3 results to pull from."); return; }
+    const prev = phases[idx-1], cur = state.active.phase;
+    let applied=0; const skipped=[];
+    lifts.forEach(l=>{
+      const e = realizationE1RM(prev.id, l.id);
+      if(e===null){ skipped.push(l.short); return; }
+      state.trainingMax[cur][l.id] = String(roundWeight(e));
+      applied++;
+    });
+    save(); renderTrainingMaxes(); renderWorkout();
+    if(applied===0){
+      alert(`No completed Week 3 (Realization) AMRAP results found in ${prev.label} yet.`);
+    } else {
+      alert(`Set ${applied} training max${applied===1?'':'es'} for ${currentPhase().label} from ${prev.label}'s Week 3 AMRAP results.${skipped.length ? ` Skipped: ${skipped.join(', ')} (no Week 3 AMRAP logged yet).` : ''}`);
+    }
+  }
+
   function escapeHtml(value){
     return String(value ?? '').replace(/[&<>'"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   }
@@ -1443,7 +1523,7 @@
       document.title='Workout Calendar · Juggernaut Tracker';
     } else {
       mainGrid?.classList.remove('calendar-mode');
-      renderTrainingMaxes();
+      renderTrainingMaxes({autoToggle:true});
       renderWorkout();
       document.title=`${currentPhase().label} · Juggernaut Tracker`;
     }
@@ -1461,6 +1541,7 @@
   }
 
   $('#copyTmBtn').addEventListener('click',copyPreviousPhase);
+  $('#autofillTmBtn').addEventListener('click',autofillFromRealization);
   $('#clearTmBtn').addEventListener('click',()=>{
     if(!confirm(`Clear all training maxes for ${currentPhase().label}?`)) return;
     lifts.forEach(l=>state.trainingMax[state.active.phase][l.id]=''); save(); renderTrainingMaxes(); renderWorkout();
