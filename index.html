@@ -135,7 +135,7 @@
   .accessories{margin-top:18px}
   .accessory-list{display:grid;gap:8px}
   .acc-row{
-    display:grid;grid-template-columns:34px minmax(180px,1.5fr) minmax(110px,.7fr) minmax(90px,.55fr) minmax(110px,.7fr);
+    display:grid;grid-template-columns:34px minmax(180px,1.4fr) minmax(110px,.65fr) minmax(90px,.5fr) minmax(220px,1fr);
     gap:8px;align-items:center;border:1px solid var(--line);background:#0a0e14;padding:9px;border-radius:7px;
   }
   @media(max-width:760px){
@@ -148,6 +148,93 @@
     width:22px;height:22px;accent-color:var(--green);cursor:pointer
   }
   .field-cap{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:0 0 4px 2px;font-weight:800}
+  .acc-reps-grid{display:grid;grid-template-columns:repeat(3,minmax(52px,1fr));gap:6px}
+  .exercise-suggest{
+    margin-top:5px;
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    font-size:10px;color:var(--muted);line-height:1.3;
+  }
+  .exercise-suggest strong{color:#a9bad0;font-weight:800}
+  .suggest-apply{
+    border:0;background:transparent;color:var(--blue);padding:0;
+    min-height:auto;font-size:10px;font-weight:900;cursor:pointer;
+  }
+  .suggest-apply:hover{text-decoration:underline}
+  .bw-badge{
+    display:inline-flex;align-items:center;margin-top:5px;border:1px solid #526274;
+    border-radius:999px;padding:3px 6px;font-size:9px;font-weight:900;color:#d8e2ee;background:#151b24;
+  }
+  .acc-repbox{min-width:0}
+  .acc-repbox input{text-align:center;font-weight:850;padding-left:5px;padding-right:5px}
+  .acc-trend{grid-column:2/-1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:2px 0 1px}
+  .trend-badge{display:inline-flex;align-items:center;border:1px solid var(--line2);border-radius:999px;padding:4px 7px;font-size:10px;font-weight:900;letter-spacing:.03em;white-space:nowrap}
+  .trend-badge.up{color:#baf5d4;border-color:#287a52;background:#0b2a1d}
+  .trend-badge.down{color:#ffc2c2;border-color:#7b3b3b;background:#291313}
+  .trend-badge.flat{color:#c3ccd9;border-color:#465267;background:#151b24}
+  .trend-badge.new{color:#cce6ff;border-color:#2f76c0;background:#0a2b4f}
+  .trend-note{font-size:10px;color:var(--muted);line-height:1.35}
+  .overload-tip{margin:0 0 10px;border-left:3px solid var(--green);background:#0c1712;padding:9px 10px;border-radius:6px;color:#b9d8c7;font-size:11px;line-height:1.45}
+
+  /* Workout calendar */
+  .grid.calendar-mode{grid-template-columns:1fr}
+  .grid.calendar-mode #trackerSidebar{display:none!important}
+  .calendar-shell{display:grid;gap:14px}
+  .calendar-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+  .calendar-title{font-size:30px;font-weight:900;letter-spacing:-.02em}
+  .calendar-subtitle{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.45}
+  .calendar-nav{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .calendar-month-label{min-width:150px;text-align:center;font-size:15px;font-weight:900}
+  .calendar-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .calendar-stat{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:11px}
+  .calendar-stat-label{font-size:9px;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:900}
+  .calendar-stat-value{font-size:24px;font-weight:950;line-height:1.1;margin-top:4px}
+  .calendar-stat-copy{font-size:10px;color:var(--muted);margin-top:3px}
+  .calendar-board{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#090d12}
+  .calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+  .cal-weekday{padding:8px 4px;text-align:center;border-bottom:1px solid var(--line);background:#0d1219;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:900}
+  .cal-day{
+    min-height:88px;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+    border-radius:0;background:#0a0e14;color:var(--text);padding:7px;text-align:left;cursor:pointer;
+    display:flex;flex-direction:column;gap:6px;overflow:hidden;
+  }
+  .cal-day:nth-child(7n){border-right:0}
+  .cal-day:hover{background:#111821}
+  .cal-day.empty{cursor:default;background:#080b10}
+  .cal-day.today .cal-date-num{color:#fff;background:#245f9c;border-color:#3978b8}
+  .cal-day.selected{background:#101c2a;box-shadow:inset 0 0 0 1px var(--blue)}
+  .cal-day.has-workout{background:#0c1513}
+  .cal-day.has-workout.selected{background:#102119}
+  .cal-date-num{
+    width:26px;height:26px;border:1px solid transparent;border-radius:50%;display:grid;place-items:center;
+    font-size:11px;font-weight:900;flex:0 0 auto;
+  }
+  .cal-lifts{display:flex;gap:4px;flex-wrap:wrap;align-content:flex-start}
+  .cal-lift{
+    display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:20px;
+    border-radius:5px;padding:0 5px;font-size:9px;font-weight:950;border:1px solid var(--line2);
+    background:#141b25;color:#dce6f2;
+  }
+  .cal-lift.bench{border-color:#2f76c0;background:#0a2b4f;color:#cce6ff}
+  .cal-lift.squat{border-color:#7a6630;background:#2a210b;color:#ffe4a3}
+  .cal-lift.ohp{border-color:#694c8b;background:#21142f;color:#e4cfff}
+  .cal-lift.deadlift{border-color:#7b4646;background:#2a1414;color:#ffd0d0}
+  .cal-more{font-size:9px;color:var(--muted);font-weight:800}
+  .calendar-detail{
+    border:1px solid var(--line);background:#0b1016;border-radius:9px;padding:13px;
+  }
+  .calendar-detail-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:9px}
+  .calendar-detail-title{font-size:16px;font-weight:900}
+  .calendar-sessions{display:grid;gap:8px}
+  .calendar-session{
+    border:1px solid var(--line);background:#090d12;border-radius:7px;padding:10px;
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+  }
+  .calendar-session-name{font-size:13px;font-weight:900}
+  .calendar-session-meta{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .calendar-session-note{font-size:10px;color:#aeb9c9;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .calendar-empty-copy{color:var(--muted);font-size:12px;line-height:1.5;padding:4px 0}
+  .calendar-tip{border-left:3px solid var(--blue);background:#0b1420;border-radius:7px;padding:10px 11px;color:#bcd8f3;font-size:11px;line-height:1.45}
+
   .notes{margin-top:18px}
   textarea{min-height:150px;resize:vertical;line-height:1.45}
   .progress-wrap{margin-top:14px}
@@ -238,7 +325,8 @@
       grid-template-areas:
         "check name name"
         ". prescription load"
-        ". reps reps";
+        ". reps reps"
+        ". trend trend";
       gap:8px;padding:10px;align-items:start;
     }
     .acc-row>.check{grid-area:check;margin-top:25px;width:24px;height:24px}
@@ -246,6 +334,27 @@
     .acc-row>.acc-rx{grid-area:prescription;min-width:0}
     .acc-row>.acc-load{grid-area:load;min-width:0}
     .acc-row>.acc-reps{grid-area:reps;min-width:0}
+    .acc-row>.acc-trend{grid-area:trend;grid-column:auto;padding-top:1px}
+    .acc-reps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .acc-repbox input{min-height:48px;font-size:18px}
+    .calendar-title{font-size:26px}
+    .calendar-top{align-items:stretch}
+    .calendar-nav{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:6px;width:100%}
+    .calendar-nav .ghost-btn{padding:7px 6px;min-height:42px}
+    .calendar-nav #calendarTodayBtn{grid-column:1/-1}
+    .calendar-month-label{min-width:0;display:grid;place-items:center;font-size:14px}
+    .calendar-stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+    .calendar-stat{padding:9px 7px}
+    .calendar-stat-value{font-size:21px}
+    .calendar-stat-copy{display:none}
+    .cal-weekday{font-size:8px;padding:7px 2px}
+    .cal-day{min-height:60px;padding:4px;gap:3px}
+    .cal-date-num{width:22px;height:22px;font-size:10px}
+    .cal-lifts{gap:2px}
+    .cal-lift{min-width:18px;height:18px;padding:0 3px;font-size:8px}
+    .cal-more{font-size:8px}
+    .calendar-session{grid-template-columns:1fr}
+    .calendar-session .ghost-btn{width:100%}
     .field-cap{font-size:8px;margin-bottom:4px}
     .progress-wrap{margin-top:12px}
     textarea{min-height:180px}
@@ -294,14 +403,14 @@
     <nav class="phase-tabs" id="phaseTabs"></nav>
   </header>
 
-  <main class="grid">
+  <main class="grid" id="mainGrid">
     <section>
       <div class="card">
         <div class="card-body" id="workoutView"></div>
       </div>
     </section>
 
-    <aside style="display:grid;gap:18px">
+    <aside id="trackerSidebar" style="display:grid;gap:18px">
       <div class="card">
         <div class="card-head"><h3>Training Maxes</h3><span class="subtle" id="tmPhaseLabel"></span></div>
         <div class="card-body">
@@ -321,7 +430,7 @@
             <div class="info-item"><strong>Green highlight:</strong> you met every rep target in that prescription block.</div>
             <div class="info-item"><strong>Blue PR:</strong> an AMRAP produced a higher estimated 1RM than another AMRAP you have logged for that lift.</div>
             <div class="info-item"><strong>Baseline:</strong> the first AMRAP logged for a lift. It becomes the number future AMRAPs can beat.</div>
-            <div class="info-item"><strong>Accessories:</strong> each workout has five. Names and prescriptions are editable, so you can swap movements whenever you want.</div>
+            <div class="info-item"><strong>Accessories:</strong> each workout has five. Reps are logged set-by-set, and week-to-week arrows show load/repetition progression for the same exercise.</div>
           </div>
         </div>
       </div>
@@ -482,9 +591,11 @@
 
   function blankState(){
     const s = {
-      version:2,
+      version:4,
       rounding:5,
-      active:{ phase:'10s', week:0, lift:'bench' },
+      active:{ phase:'10s', week:0, lift:'bench', view:'tracker' },
+      calendarMonth:'',
+      calendarSelectedDate:'',
       trainingMax:{},
       workouts:{}
     };
@@ -509,6 +620,8 @@
     if(!incoming || typeof incoming !== 'object') return base;
     base.rounding = incoming.rounding ?? base.rounding;
     if(incoming.active) base.active = {...base.active, ...incoming.active};
+    base.calendarMonth = typeof incoming.calendarMonth === 'string' ? incoming.calendarMonth : '';
+    base.calendarSelectedDate = typeof incoming.calendarSelectedDate === 'string' ? incoming.calendarSelectedDate : '';
     phases.forEach(p => lifts.forEach(l => {
       if(incoming.trainingMax?.[p.id]?.[l.id] !== undefined) base.trainingMax[p.id][l.id] = incoming.trainingMax[p.id][l.id];
     }));
@@ -532,20 +645,182 @@
   function currentLift(){ return lifts.find(l => l.id === state.active.lift) || lifts[0]; }
   function workoutKey(phaseId, weekIndex, liftId){ return `${phaseId}|w${weekIndex+1}|${liftId}`; }
 
+  function accessorySetCount(rx){
+    const m = String(rx || '').match(/^\s*(\d+)\s*[x×]/i);
+    const n = m ? Number(m[1]) : 3;
+    return Math.max(1, Math.min(6, Number.isFinite(n) ? n : 3));
+  }
+
+  function accessoryRepRange(rx){
+    const s = String(rx || '');
+    const range = s.match(/[x×]\s*(\d+)\s*[–—-]\s*(\d+)/i);
+    if(range) return {min:Number(range[1]), max:Number(range[2])};
+    const single = s.match(/[x×]\s*(\d+)/i);
+    if(single){
+      const n = Number(single[1]);
+      return {min:n,max:n};
+    }
+    return null;
+  }
+
+  const hypertrophyRangePresets = ['6–10','8–12','10–15','12–20','15–30'];
+
+  function suggestedHypertrophyRange(name){
+    const n = normalizedExerciseName(name);
+
+    // Smaller/isolation movements generally get higher-rep suggestions.
+    if(/lateral raise|reverse fly|rear delt|face pull|hip abduction|adduction/.test(n)) return '12–20';
+    if(/calf|shrug/.test(n)) return '10–20';
+    if(/leg extension|leg curl|hamstring curl|tricep|triceps|pressdown|extension|curl|fly|flye|pec deck/.test(n)) return '10–15';
+
+    // Bodyweight movements often benefit from a wider practical range.
+    if(/hanging leg raise|leg raise|crunch|sit.?up|push.?up/.test(n)) return '8–15';
+    if(/dip/.test(n)) return '6–12';
+
+    // Larger compound accessories.
+    if(/rdl|romanian deadlift|good morning|barbell row/.test(n)) return '6–10';
+    if(/shoulder press|machine press|chest supported row|high row|lat pulldown|pulldown|row|hip thrust/.test(n)) return '8–12';
+    if(/lunge|split squat|bulgarian|leg press|hack squat|step.?up/.test(n)) return '8–15';
+
+    return '10–15';
+  }
+
+  function applyAccessoryRange(rx, rangeText){
+    const sets = accessorySetCount(rx);
+    return `${sets} × ${rangeText}`;
+  }
+
+  function normalizeAccessoryReps(value){
+    if(Array.isArray(value)) return value.map(v => String(v ?? ''));
+    if(value === undefined || value === null || value === '') return [];
+    return String(value).split(/[,\s/]+/).map(v => v.trim()).filter(Boolean);
+  }
+
+  function previousWeekLocation(phaseId, weekIndex){
+    const pi = phases.findIndex(p => p.id === phaseId);
+    if(pi < 0) return null;
+    if(weekIndex > 0) return {phaseId, weekIndex:weekIndex - 1};
+    if(pi > 0){
+      const prevPhase = phases[pi - 1];
+      return {phaseId:prevPhase.id, weekIndex:prevPhase.weeks.length - 1};
+    }
+    return null;
+  }
+
+  function normalizedExerciseName(name){
+    return String(name || '').trim().toLowerCase().replace(/\s+/g,' ');
+  }
+
+  function accessorySnapshot(a){
+    const reps = normalizeAccessoryReps(a?.reps);
+    const numericReps = reps
+      .filter(v => String(v).trim() !== '')
+      .map(v => Number(v))
+      .filter(v => Number.isFinite(v) && v >= 0);
+    const totalReps = numericReps.reduce((sum,v) => sum + v, 0);
+    const loadRaw = String(a?.load ?? '').trim();
+    const isBW = /^(bw|bodyweight)$/i.test(loadRaw);
+    const loadNum = isBW ? 0 : (loadRaw !== '' && Number.isFinite(Number(loadRaw)) ? Number(loadRaw) : null);
+    return {
+      reps,
+      totalReps,
+      hasReps:numericReps.length > 0,
+      loadRaw,
+      loadNum,
+      hasLoad:loadRaw !== ''
+    };
+  }
+
+  function weekLabel(phaseId, weekIndex){
+    const p = phases.find(x => x.id === phaseId);
+    return p ? `${p.label.replace(' Phase','')} W${weekIndex + 1}` : `W${weekIndex + 1}`;
+  }
+
+  function accessoryTrendHtml(p,wi,lift,a,ai){
+    const prevLoc = previousWeekLocation(p.id,wi);
+    if(!prevLoc) return `<span class="trend-note">First week — no previous accessory session to compare yet.</span>`;
+
+    const prevW = state.workouts[workoutKey(prevLoc.phaseId,prevLoc.weekIndex,lift.id)];
+    const prev = prevW?.accessories?.[ai];
+    if(!prev) return `<span class="trend-note">No accessory data logged for the previous week yet.</span>`;
+
+    if(normalizedExerciseName(prev.name) !== normalizedExerciseName(a.name)){
+      return `<span class="trend-badge new">NEW</span><span class="trend-note">Exercise changed from last week, so the overload comparison reset.</span>`;
+    }
+
+    const cur = accessorySnapshot(a);
+    const old = accessorySnapshot(prev);
+    const prevSummary = [
+      old.hasLoad ? `${escapeHtml(old.loadRaw)} lb` : '',
+      old.hasReps ? `${old.reps.map(escapeHtml).join(' / ')} reps` : ''
+    ].filter(Boolean).join(' · ');
+
+    if(!old.hasLoad && !old.hasReps){
+      return `<span class="trend-note">Previous week is present, but no load/reps were logged.</span>`;
+    }
+    if(!cur.hasReps){
+      return `<span class="trend-note">Last week: ${prevSummary || 'no numeric data'}. Enter this week's reps to calculate overload.</span>`;
+    }
+
+    let loadDelta = null;
+    if(cur.loadNum !== null && old.loadNum !== null) loadDelta = cur.loadNum - old.loadNum;
+    else if(cur.hasLoad && old.hasLoad && cur.loadRaw === old.loadRaw) loadDelta = 0;
+
+    const repsDelta = cur.hasReps && old.hasReps ? cur.totalReps - old.totalReps : null;
+    const badges = [];
+
+    // Overall double-progression signal: more load is progress; at the same load,
+    // more total reps is progress. Mixed changes are shown transparently.
+    let overallClass = 'flat', overallText = '→ SAME';
+    if(loadDelta !== null && loadDelta > 0){
+      overallClass = 'up'; overallText = '↑ PROGRESS';
+    } else if((loadDelta === 0 || loadDelta === null) && repsDelta !== null && repsDelta > 0){
+      overallClass = 'up'; overallText = '↑ PROGRESS';
+    } else if(loadDelta !== null && loadDelta < 0 && repsDelta !== null && repsDelta > 0){
+      overallClass = 'flat'; overallText = '↕ MIXED';
+    } else if((loadDelta !== null && loadDelta < 0) || ((loadDelta === 0 || loadDelta === null) && repsDelta !== null && repsDelta < 0)){
+      overallClass = 'down'; overallText = '↓ DOWN';
+    }
+    badges.push(`<span class="trend-badge ${overallClass}">${overallText}</span>`);
+
+    if(loadDelta !== null){
+      if(loadDelta > 0) badges.push(`<span class="trend-badge up">Load ↑ ${formatDelta(loadDelta)} lb</span>`);
+      else if(loadDelta < 0) badges.push(`<span class="trend-badge down">Load ↓ ${formatDelta(Math.abs(loadDelta))} lb</span>`);
+      else badges.push(`<span class="trend-badge flat">Load →</span>`);
+    }
+
+    if(repsDelta !== null){
+      if(repsDelta > 0) badges.push(`<span class="trend-badge up">Reps ↑ ${repsDelta}</span>`);
+      else if(repsDelta < 0) badges.push(`<span class="trend-badge down">Reps ↓ ${Math.abs(repsDelta)}</span>`);
+      else badges.push(`<span class="trend-badge flat">Reps →</span>`);
+    }
+
+    return `${badges.join('')}<span class="trend-note">vs ${weekLabel(prevLoc.phaseId,prevLoc.weekIndex)} · ${prevSummary || 'previous week'}</span>`;
+  }
+
+  function formatDelta(n){
+    return Number.isInteger(n) ? String(n) : Number(n).toFixed(1);
+  }
+
   function ensureWorkout(phaseId, weekIndex, liftId){
     const key = workoutKey(phaseId, weekIndex, liftId);
     if(!state.workouts[key]){
       state.workouts[key] = {
-        date:'', notes:'', main:{}, accessories: accessoryDefaults[liftId].map(([name,rx]) => ({name,rx,load:'',reps:'',done:false}))
+        date:'', notes:'', main:{}, accessories: accessoryDefaults[liftId].map(([name,rx]) => ({name,rx,load:'',reps:[],done:false}))
       };
     }
     const w = state.workouts[key];
     if(!Array.isArray(w.accessories)) w.accessories = [];
     while(w.accessories.length < 5){
       const fallback = accessoryDefaults[liftId][w.accessories.length] || [`Accessory ${w.accessories.length+1}`,'3 × 8–12'];
-      w.accessories.push({name:fallback[0],rx:fallback[1],load:'',reps:'',done:false});
+      w.accessories.push({name:fallback[0],rx:fallback[1],load:'',reps:[],done:false});
     }
     w.accessories = w.accessories.slice(0,5);
+    w.accessories.forEach(a => {
+      a.reps = normalizeAccessoryReps(a.reps);
+      if(a.load === undefined || a.load === null) a.load = '';
+      if(a.done === undefined) a.done = false;
+    });
     if(!w.main || typeof w.main !== 'object') w.main = {};
     return w;
   }
@@ -589,14 +864,242 @@
     return out;
   }
 
+  function localTodayYmd(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function validMonthKey(value){
+    return /^\d{4}-\d{2}$/.test(String(value || ''));
+  }
+
+  function calendarEntries(){
+    const entries = [];
+    Object.entries(state.workouts || {}).forEach(([key,w]) => {
+      const date = String(w?.date || '');
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)) return;
+
+      const parts = key.split('|');
+      if(parts.length !== 3) return;
+      const phaseId = parts[0];
+      const weekIndex = Math.max(0, Number(String(parts[1]).replace(/^w/,'') || 1) - 1);
+      const liftId = parts[2];
+      const p = phases.find(x => x.id === phaseId);
+      const lift = lifts.find(x => x.id === liftId);
+      if(!p || !lift || !p.weeks[weekIndex]) return;
+
+      const mainLogged = Object.values(w.main || {}).some(block =>
+        Array.isArray(block?.reps) && block.reps.some(v => String(v ?? '').trim() !== '')
+      );
+      const accessoriesDone = Array.isArray(w.accessories) ? w.accessories.filter(a => a?.done).length : 0;
+
+      entries.push({
+        key,
+        date,
+        phaseId,
+        weekIndex,
+        liftId,
+        liftName:lift.name,
+        liftShort:lift.short,
+        day:lift.day,
+        phaseLabel:p.label,
+        weekName:p.weeks[weekIndex].name,
+        mainLogged,
+        accessoriesDone,
+        notes:String(w.notes || '')
+      });
+    });
+
+    entries.sort((a,b) => a.date.localeCompare(b.date) || a.day.localeCompare(b.day));
+    return entries;
+  }
+
+  function monthShift(monthKey, delta){
+    const [y,m] = monthKey.split('-').map(Number);
+    const d = new Date(y, m - 1 + delta, 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  }
+
+  function monthDisplay(monthKey){
+    const [y,m] = monthKey.split('-').map(Number);
+    return new Intl.DateTimeFormat(undefined,{month:'long',year:'numeric'}).format(new Date(y,m-1,1));
+  }
+
+  function prettyDate(ymd){
+    const [y,m,d] = ymd.split('-').map(Number);
+    return new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(new Date(y,m-1,d));
+  }
+
+  function renderCalendar(){
+    const today = localTodayYmd();
+    if(!validMonthKey(state.calendarMonth)) state.calendarMonth = today.slice(0,7);
+
+    const monthKey = state.calendarMonth;
+    const [year,month] = monthKey.split('-').map(Number);
+    const firstDow = new Date(year,month-1,1).getDay();
+    const daysInMonth = new Date(year,month,0).getDate();
+    const entries = calendarEntries();
+    const monthEntries = entries.filter(e => e.date.startsWith(monthKey));
+    const byDate = new Map();
+    monthEntries.forEach(e => {
+      if(!byDate.has(e.date)) byDate.set(e.date,[]);
+      byDate.get(e.date).push(e);
+    });
+
+    if(state.calendarSelectedDate && !state.calendarSelectedDate.startsWith(monthKey)){
+      state.calendarSelectedDate = '';
+    }
+    if(!state.calendarSelectedDate){
+      if(byDate.has(today) && today.startsWith(monthKey)){
+        state.calendarSelectedDate = today;
+      } else if(monthEntries.length){
+        state.calendarSelectedDate = monthEntries[monthEntries.length-1].date;
+      }
+    }
+
+    const uniqueDays = new Set(monthEntries.map(e => e.date)).size;
+    const totalLogged = entries.length;
+    const selectedEntries = state.calendarSelectedDate ? (byDate.get(state.calendarSelectedDate) || []) : [];
+
+    const cells = [];
+    for(let i=0;i<firstDow;i++) cells.push('<div class="cal-day empty" aria-hidden="true"></div>');
+
+    for(let day=1; day<=daysInMonth; day++){
+      const date = `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const dayEntries = byDate.get(date) || [];
+      const liftBadges = dayEntries.slice(0,4).map(e =>
+        `<span class="cal-lift ${e.liftId}" title="${escapeAttr(e.liftName)}">${escapeHtml(e.liftShort === 'OHP' ? 'O' : e.liftShort[0])}</span>`
+      ).join('');
+      const more = dayEntries.length > 4 ? `<span class="cal-more">+${dayEntries.length-4}</span>` : '';
+
+      cells.push(`
+        <button type="button" class="cal-day ${dayEntries.length?'has-workout':''} ${date===today?'today':''} ${date===state.calendarSelectedDate?'selected':''}" data-cal-date="${date}" aria-label="${escapeAttr(prettyDate(date))}${dayEntries.length ? `, ${dayEntries.length} workout${dayEntries.length===1?'':'s'}` : ''}">
+          <span class="cal-date-num">${day}</span>
+          <span class="cal-lifts">${liftBadges}${more}</span>
+        </button>`);
+    }
+
+    const totalCells = firstDow + daysInMonth;
+    const trailing = (7 - (totalCells % 7)) % 7;
+    for(let i=0;i<trailing;i++) cells.push('<div class="cal-day empty" aria-hidden="true"></div>');
+
+    const detailHtml = state.calendarSelectedDate
+      ? `<div class="calendar-detail">
+          <div class="calendar-detail-head">
+            <div class="calendar-detail-title">${escapeHtml(prettyDate(state.calendarSelectedDate))}</div>
+            <span class="subtle">${selectedEntries.length ? `${selectedEntries.length} session${selectedEntries.length===1?'':'s'}` : 'Rest / unlogged day'}</span>
+          </div>
+          ${selectedEntries.length
+            ? `<div class="calendar-sessions">${selectedEntries.map(e => `
+                <div class="calendar-session">
+                  <div>
+                    <div class="calendar-session-name">${escapeHtml(e.liftName)}</div>
+                    <div class="calendar-session-meta">${escapeHtml(e.phaseLabel)} · Week ${e.weekIndex+1} ${escapeHtml(e.weekName)} · ${e.mainLogged ? 'main lift logged' : 'date logged'} · ${e.accessoriesDone}/5 accessories checked</div>
+                    ${e.notes ? `<div class="calendar-session-note">${escapeHtml(e.notes)}</div>` : ''}
+                  </div>
+                  <button type="button" class="ghost-btn small" data-open-calendar-workout="${escapeAttr(e.phaseId)}|${e.weekIndex}|${escapeAttr(e.liftId)}">Open workout</button>
+                </div>`).join('')}</div>`
+            : `<div class="calendar-empty-copy">No workout is logged for this day. A day appears automatically after you enter a Workout date on one of your training sessions.</div>`
+          }
+        </div>`
+      : `<div class="calendar-detail"><div class="calendar-empty-copy">Select a date to see the workout details for that day.</div></div>`;
+
+    workoutView.innerHTML = `
+      <div class="calendar-shell">
+        <div class="calendar-top">
+          <div>
+            <div class="kicker">Training history</div>
+            <div class="calendar-title">Workout Calendar</div>
+            <div class="calendar-subtitle">Workout dates from your Juggernaut sessions are added here automatically. Tap a training day to open that workout.</div>
+          </div>
+          <div class="calendar-nav">
+            <button type="button" class="ghost-btn small" id="calendarPrevBtn" aria-label="Previous month">←</button>
+            <div class="calendar-month-label">${escapeHtml(monthDisplay(monthKey))}</div>
+            <button type="button" class="ghost-btn small" id="calendarNextBtn" aria-label="Next month">→</button>
+            <button type="button" class="ghost-btn small" id="calendarTodayBtn">This month</button>
+          </div>
+        </div>
+
+        <div class="calendar-stats">
+          <div class="calendar-stat">
+            <div class="calendar-stat-label">Sessions</div>
+            <div class="calendar-stat-value">${monthEntries.length}</div>
+            <div class="calendar-stat-copy">workouts this month</div>
+          </div>
+          <div class="calendar-stat">
+            <div class="calendar-stat-label">Training days</div>
+            <div class="calendar-stat-value">${uniqueDays}</div>
+            <div class="calendar-stat-copy">distinct days trained</div>
+          </div>
+          <div class="calendar-stat">
+            <div class="calendar-stat-label">All time</div>
+            <div class="calendar-stat-value">${totalLogged}</div>
+            <div class="calendar-stat-copy">dated sessions logged</div>
+          </div>
+        </div>
+
+        <div class="calendar-board">
+          <div class="calendar-grid">
+            ${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => `<div class="cal-weekday">${d}</div>`).join('')}
+            ${cells.join('')}
+          </div>
+        </div>
+
+        ${detailHtml}
+
+        <div class="calendar-tip"><strong>Why I kept this simple:</strong> I would not use a daily streak for a 4-day lifting program because planned rest days are part of the program. Monthly sessions + distinct training days show consistency without treating recovery as a failure.</div>
+      </div>`;
+
+    $('#calendarPrevBtn')?.addEventListener('click',()=>{
+      state.calendarMonth = monthShift(monthKey,-1);
+      state.calendarSelectedDate = '';
+      save(); renderCalendar();
+    });
+    $('#calendarNextBtn')?.addEventListener('click',()=>{
+      state.calendarMonth = monthShift(monthKey,1);
+      state.calendarSelectedDate = '';
+      save(); renderCalendar();
+    });
+    $('#calendarTodayBtn')?.addEventListener('click',()=>{
+      state.calendarMonth = today.slice(0,7);
+      state.calendarSelectedDate = byDate.has(today) ? today : '';
+      save(); renderCalendar();
+    });
+    workoutView.querySelectorAll('[data-cal-date]').forEach(btn => btn.addEventListener('click',()=>{
+      state.calendarSelectedDate = btn.dataset.calDate;
+      save(); renderCalendar();
+    }));
+    workoutView.querySelectorAll('[data-open-calendar-workout]').forEach(btn => btn.addEventListener('click',()=>{
+      const [phaseId,weekIndex,liftId] = btn.dataset.openCalendarWorkout.split('|');
+      state.active.view = 'tracker';
+      state.active.phase = phaseId;
+      state.active.week = Number(weekIndex);
+      state.active.lift = liftId;
+      location.hash = `phase-${phaseId}`;
+      save(); render();
+    }));
+  }
+
   function renderPhaseTabs(){
-    phaseTabs.innerHTML = phases.map(p => `<button class="phase-tab ${p.id===state.active.phase?'active':''}" data-phase="${p.id}">${p.label}</button>`).join('');
+    const phaseButtons = phases.map(p => `<button class="phase-tab ${state.active.view!=='calendar' && p.id===state.active.phase?'active':''}" data-phase="${p.id}">${p.label}</button>`).join('');
+    phaseTabs.innerHTML = `${phaseButtons}<button class="phase-tab ${state.active.view==='calendar'?'active':''}" data-calendar>Calendar</button>`;
+
     phaseTabs.querySelectorAll('[data-phase]').forEach(btn => btn.addEventListener('click',()=>{
+      state.active.view = 'tracker';
       state.active.phase = btn.dataset.phase;
       state.active.week = 0;
       location.hash = `phase-${state.active.phase}`;
       save(); render();
     }));
+
+    phaseTabs.querySelector('[data-calendar]')?.addEventListener('click',()=>{
+      state.active.view = 'calendar';
+      location.hash = 'calendar';
+      save(); render();
+    });
   }
 
   function renderTrainingMaxes(){
@@ -624,7 +1127,7 @@
     const tm = state.trainingMax[p.id][lift.id];
 
     const rxHtml = week.rx.map((rx,ri) => renderPrescription(p,wi,lift,rx,ri,w,tm)).join('');
-    const accHtml = w.accessories.map((a,ai) => renderAccessory(a,ai)).join('');
+    const accHtml = w.accessories.map((a,ai) => renderAccessory(p,wi,lift,a,ai)).join('');
 
     workoutView.innerHTML = `
       <div>
@@ -672,8 +1175,9 @@
         <div class="accessories">
           <div class="card-head" style="padding-left:0;padding-right:0;border-bottom:0">
             <h2>Accessories · 5 movements</h2>
-            <span class="subtle">Editable</span>
+            <span class="subtle">Progressive overload</span>
           </div>
+          <div class="overload-tip"><strong>Accessory progression:</strong> use the Prescription as your working rep target. Build reps within that range; once every set reaches the top end with solid form, the tracker will show <strong>↑ LOAD NEXT WEEK</strong>. Enter <strong>0</strong> or BW for bodyweight-only movements. Main-lift progression is unchanged.</div>
           <div class="accessory-list">${accHtml}</div>
           <div class="progress-wrap">
             <div class="progress-line"><span>Accessory progress</span><span id="accProgressText"></span></div>
@@ -708,10 +1212,31 @@
     }));
     workoutView.querySelectorAll('[data-rep-input]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
 
-    workoutView.querySelectorAll('[data-acc-field]').forEach(inp => inp.addEventListener('input',()=>{
-      const ai = Number(inp.dataset.accIndex), field=inp.dataset.accField;
-      w.accessories[ai][field]=inp.value; save();
+    workoutView.querySelectorAll('[data-acc-field]').forEach(inp => {
+      inp.addEventListener('input',()=>{
+        const ai = Number(inp.dataset.accIndex), field=inp.dataset.accField;
+        w.accessories[ai][field]=inp.value; save();
+      });
+      inp.addEventListener('change',()=>renderWorkout());
+    });
+
+    workoutView.querySelectorAll('[data-acc-rep]').forEach(inp => {
+      inp.addEventListener('input',()=>{
+        const ai = Number(inp.dataset.accIndex), si = Number(inp.dataset.accSetIndex);
+        if(!Array.isArray(w.accessories[ai].reps)) w.accessories[ai].reps = normalizeAccessoryReps(w.accessories[ai].reps);
+        w.accessories[ai].reps[si] = inp.value;
+        save();
+      });
+      inp.addEventListener('change',()=>renderWorkout());
+    });
+
+    workoutView.querySelectorAll('[data-use-suggested]').forEach(btn => btn.addEventListener('click',()=>{
+      const ai = Number(btn.dataset.accIndex);
+      const suggested = suggestedHypertrophyRange(w.accessories[ai].name);
+      w.accessories[ai].rx = applyAccessoryRange(w.accessories[ai].rx, suggested);
+      save(); renderWorkout();
     }));
+
     workoutView.querySelectorAll('[data-acc-done]').forEach(chk => chk.addEventListener('change',()=>{
       const ai=Number(chk.dataset.accDone); w.accessories[ai].done=chk.checked; save(); renderWorkout();
     }));
@@ -772,25 +1297,62 @@
     </div>`;
   }
 
-  function renderAccessory(a,ai){
+  function renderAccessory(p,wi,lift,a,ai){
+    const sets = accessorySetCount(a.rx);
+    const repsArr = normalizeAccessoryReps(a.reps);
+    const range = accessoryRepRange(a.rx);
+    const suggested = suggestedHypertrophyRange(a.name);
+
+    const allSetsAtTop = range && Array.from({length:sets},(_,si)=>{
+      const value = String(repsArr[si] ?? '').trim();
+      return value !== '' && Number(value) >= range.max;
+    }).every(Boolean);
+
+    const nextLoadBadge = allSetsAtTop
+      ? `<span class="trend-badge up">↑ LOAD NEXT WEEK</span>`
+      : '';
+
+    const suggestionLine = `
+      <div class="exercise-suggest">
+        <span>Suggested hypertrophy range: <strong>${suggested}</strong></span>
+        <button type="button" class="suggest-apply" data-use-suggested data-acc-index="${ai}">Apply</button>
+      </div>`;
+
+    const repInputs = Array.from({length:sets},(_,si)=>`
+      <label class="acc-repbox">
+        <div class="field-cap">Set ${si+1}</div>
+        <input type="number" min="0" step="1" inputmode="numeric" placeholder="—" value="${escapeAttr(repsArr[si] ?? '')}" data-acc-rep data-acc-index="${ai}" data-acc-set-index="${si}">
+      </label>`).join('');
+
+    const loadText = String(a.load ?? '').trim();
+    const bodyweight = loadText === '0' || /^(bw|bodyweight)$/i.test(loadText);
+
     return `<div class="acc-row ${a.done?'done':''}">
       <input class="check" type="checkbox" ${a.done?'checked':''} data-acc-done="${ai}" aria-label="Mark accessory complete">
+
       <div class="acc-name">
         <div class="field-cap">Exercise</div>
         <input value="${escapeAttr(a.name||'')}" data-acc-field="name" data-acc-index="${ai}">
+        ${suggestionLine}
       </div>
+
       <div class="acc-rx">
         <div class="field-cap">Prescription</div>
-        <input value="${escapeAttr(a.rx||'')}" data-acc-field="rx" data-acc-index="${ai}">
+        <input value="${escapeAttr(a.rx||'')}" data-acc-field="rx" data-acc-index="${ai}" aria-label="Sets and rep range">
       </div>
+
       <div class="acc-load">
-        <div class="field-cap">Load</div>
-        <input placeholder="lb" value="${escapeAttr(a.load||'')}" data-acc-field="load" data-acc-index="${ai}">
+        <div class="field-cap">Added load</div>
+        <input inputmode="decimal" placeholder="0 = BW" value="${escapeAttr(a.load||'')}" data-acc-field="load" data-acc-index="${ai}">
+        ${bodyweight ? '<span class="bw-badge">BW · no added weight</span>' : ''}
       </div>
+
       <div class="acc-reps">
         <div class="field-cap">Reps completed</div>
-        <input placeholder="e.g. 12,12,10" value="${escapeAttr(a.reps||'')}" data-acc-field="reps" data-acc-index="${ai}">
+        <div class="acc-reps-grid">${repInputs}</div>
       </div>
+
+      <div class="acc-trend">${nextLoadBadge}${accessoryTrendHtml(p,wi,lift,a,ai)}</div>
     </div>`;
   }
 
@@ -825,14 +1387,31 @@
   function escapeAttr(value){ return escapeHtml(value); }
 
   function render(){
-    renderPhaseTabs(); renderTrainingMaxes(); renderWorkout();
+    renderPhaseTabs();
+    const mainGrid = $('#mainGrid');
+
+    if(state.active.view === 'calendar'){
+      mainGrid?.classList.add('calendar-mode');
+      renderCalendar();
+      document.title='Workout Calendar · Juggernaut Tracker';
+    } else {
+      mainGrid?.classList.remove('calendar-mode');
+      renderTrainingMaxes();
+      renderWorkout();
+      document.title=`${currentPhase().label} · Juggernaut Tracker`;
+    }
+
     $('#roundingSelect').value=String(state.rounding);
-    document.title=`${currentPhase().label} · Juggernaut Tracker`;
   }
 
-  // Hash support makes each phase behave like its own page within the file.
+  // Hash support makes each phase and the calendar behave like separate pages within the file.
   const hashMatch = location.hash.match(/^#phase-(10s|8s|5s|3s)$/);
-  if(hashMatch) state.active.phase = hashMatch[1];
+  if(hashMatch){
+    state.active.phase = hashMatch[1];
+    state.active.view = 'tracker';
+  } else if(location.hash === '#calendar'){
+    state.active.view = 'calendar';
+  }
 
   $('#copyTmBtn').addEventListener('click',copyPreviousPhase);
   $('#clearTmBtn').addEventListener('click',()=>{
@@ -872,7 +1451,18 @@
 
   window.addEventListener('hashchange',()=>{
     const m=location.hash.match(/^#phase-(10s|8s|5s|3s)$/);
-    if(m && m[1]!==state.active.phase){state.active.phase=m[1];state.active.week=0;save();render();}
+    if(m){
+      const changed = m[1]!==state.active.phase || state.active.view!=='tracker';
+      state.active.phase=m[1];
+      state.active.view='tracker';
+      if(changed) state.active.week=0;
+      save(); render();
+      return;
+    }
+    if(location.hash === '#calendar' && state.active.view!=='calendar'){
+      state.active.view='calendar';
+      save(); render();
+    }
   });
 
   // iPhone Home Screen install helper.
