@@ -112,7 +112,7 @@
   .prescription.pr{border-color:var(--blue);background:linear-gradient(180deg,var(--blue-bg),#0d192a);box-shadow:0 0 0 1px rgba(83,167,255,.15) inset}
   .prescription-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
   .rx-title{font-size:17px;font-weight:850}
-  .complete .rx-title{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--green)}
+  .complete .rx-title{text-decoration:none}
   .rx-weight{font-size:13px;color:var(--muted);margin-top:3px}
   .rx-weight-card{
     margin-top:8px;display:inline-flex;flex-direction:column;gap:2px;
@@ -143,7 +143,7 @@
     .acc-row .acc-name{grid-column:2/4}
   }
   .acc-row.done{border-color:rgba(49,209,124,.55);background:var(--green-bg)}
-  .acc-row.done .acc-name input{text-decoration:line-through;color:#9fd7b8}
+  .acc-row.done .acc-name input{text-decoration:none;color:#9fd7b8}
   .check{
     width:22px;height:22px;accent-color:var(--green);cursor:pointer
   }
@@ -318,7 +318,7 @@
         <div class="card-head"><h3>How the tracker marks progress</h3></div>
         <div class="card-body">
           <div class="info-list">
-            <div class="info-item"><strong>Green + crossed out:</strong> you met every rep target in that prescription block.</div>
+            <div class="info-item"><strong>Green highlight:</strong> you met every rep target in that prescription block.</div>
             <div class="info-item"><strong>Blue PR:</strong> an AMRAP produced a higher estimated 1RM than another AMRAP you have logged for that lift.</div>
             <div class="info-item"><strong>Baseline:</strong> the first AMRAP logged for a lift. It becomes the number future AMRAPs can beat.</div>
             <div class="info-item"><strong>Accessories:</strong> each workout has five. Names and prescriptions are editable, so you can swap movements whenever you want.</div>
@@ -609,8 +609,9 @@
       </div>`).join('');
     tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('input',()=>{
       state.trainingMax[p.id][inp.dataset.tm] = inp.value;
-      save(); renderWorkout();
+      save();
     }));
+    tmGrid.querySelectorAll('[data-tm]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
   }
 
   function renderWorkout(){
@@ -702,8 +703,10 @@
       if(!w.main[ri]) w.main[ri]={reps:[]};
       if(!Array.isArray(w.main[ri].reps)) w.main[ri].reps=[];
       w.main[ri].reps[si]=inp.value;
-      save(); renderWorkout();
+      save();
+      updateProgress(p,wi,lift,w);
     }));
+    workoutView.querySelectorAll('[data-rep-input]').forEach(inp => inp.addEventListener('change',()=>renderWorkout()));
 
     workoutView.querySelectorAll('[data-acc-field]').forEach(inp => inp.addEventListener('input',()=>{
       const ai = Number(inp.dataset.accIndex), field=inp.dataset.accField;
