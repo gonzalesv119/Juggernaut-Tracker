@@ -277,13 +277,29 @@
     .brand h1{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .brand p,.save-indicator{display:none}
     #settingsBtn{white-space:nowrap;padding:8px 10px;min-height:40px}
-    .phase-tabs{
-      flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;
-      -webkit-overflow-scrolling:touch;scrollbar-width:none;
-      margin:9px -2px 0;padding:0 2px 2px;gap:7px;
+    @media(max-width:430px){
+      .brandrow{align-items:center}
+      .brand h1{font-size:15px}
+      #settingsBtn{font-size:11px;padding:7px 8px}
     }
-    .phase-tabs::-webkit-scrollbar{display:none}
-    .phase-tab{flex:0 0 auto;min-height:42px;padding:8px 12px;font-size:12px}
+    .phase-tabs{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:7px;
+      margin:9px 0 0;
+      padding:0;
+      overflow:visible;
+    }
+    .phase-tab{
+      width:100%;
+      min-width:0;
+      min-height:42px;
+      padding:8px 6px;
+      font-size:11px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
     .grid{display:grid;grid-template-columns:1fr;gap:12px}
     .card{border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.24)}
     .card-body{padding:13px}
@@ -293,9 +309,17 @@
     .nav-group{margin-top:14px}
     #workoutView .segmented{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
     #workoutView .seg-btn{width:100%;min-height:46px;padding:8px 7px;font-size:11px;line-height:1.2}
-    .workout-meta{align-items:stretch;margin-top:14px;padding-top:13px}
+    .workout-meta{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      align-items:start;
+      margin-top:14px;
+      padding-top:13px;
+      gap:11px;
+    }
     .workout-title{font-size:26px}
-    .date-field{width:100%;min-width:0}
+    .date-field{width:min(100%,220px);min-width:0}
+    .date-field input{min-height:46px;padding:9px 10px;text-align:center}
     input,textarea,select{font-size:16px;padding:11px 10px}
     button{touch-action:manipulation}
     .phase-tab,.seg-btn,.ghost-btn,.danger-btn{min-height:44px}
@@ -334,7 +358,26 @@
     .acc-row>.acc-rx{grid-area:prescription;min-width:0}
     .acc-row>.acc-load{grid-area:load;min-width:0}
     .acc-row>.acc-reps{grid-area:reps;min-width:0}
-    .acc-row>.acc-trend{grid-area:trend;grid-column:auto;padding-top:1px}
+    .acc-row>.acc-trend{
+      grid-area:trend;
+      grid-column:auto;
+      width:100%;
+      min-width:0;
+      padding:5px 0 1px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      flex-wrap:wrap;
+    }
+    .acc-trend .trend-note{
+      display:block;
+      width:100%;
+      min-width:0;
+      font-size:10px;
+      line-height:1.4;
+      white-space:normal;
+      overflow-wrap:anywhere;
+    }
     .acc-reps-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .acc-repbox input{min-height:48px;font-size:18px}
     .calendar-title{font-size:26px}
@@ -738,14 +781,14 @@
 
   function accessoryTrendHtml(p,wi,lift,a,ai){
     const prevLoc = previousWeekLocation(p.id,wi);
-    if(!prevLoc) return `<span class="trend-note">First week — no previous accessory session to compare yet.</span>`;
+    if(!prevLoc) return `<span class="trend-note">First week · no previous result to compare.</span>`;
 
     const prevW = state.workouts[workoutKey(prevLoc.phaseId,prevLoc.weekIndex,lift.id)];
     const prev = prevW?.accessories?.[ai];
-    if(!prev) return `<span class="trend-note">No accessory data logged for the previous week yet.</span>`;
+    if(!prev) return `<span class="trend-note">No previous-week result logged yet.</span>`;
 
     if(normalizedExerciseName(prev.name) !== normalizedExerciseName(a.name)){
-      return `<span class="trend-badge new">NEW</span><span class="trend-note">Exercise changed from last week, so the overload comparison reset.</span>`;
+      return `<span class="trend-badge new">NEW</span><span class="trend-note">New exercise · progression starts here.</span>`;
     }
 
     const cur = accessorySnapshot(a);
@@ -756,7 +799,7 @@
     ].filter(Boolean).join(' · ');
 
     if(!old.hasLoad && !old.hasReps){
-      return `<span class="trend-note">Previous week is present, but no load/reps were logged.</span>`;
+      return `<span class="trend-note">Previous week has no load or reps to compare.</span>`;
     }
     if(!cur.hasReps){
       return `<span class="trend-note">Last week: ${prevSummary || 'no numeric data'}. Enter this week's reps to calculate overload.</span>`;
@@ -1177,7 +1220,7 @@
             <h2>Accessories · 5 movements</h2>
             <span class="subtle">Progressive overload</span>
           </div>
-          <div class="overload-tip"><strong>Accessory progression:</strong> use the Prescription as your working rep target. Build reps within that range; once every set reaches the top end with solid form, the tracker will show <strong>↑ LOAD NEXT WEEK</strong>. Enter <strong>0</strong> or BW for bodyweight-only movements. Main-lift progression is unchanged.</div>
+          <div class="overload-tip"><strong>Accessory progression:</strong> stay within the prescribed rep range and aim to add reps over time. Once every set reaches the top of the range with solid form, increase the load next week and build your reps back up.</div>
           <div class="accessory-list">${accHtml}</div>
           <div class="progress-wrap">
             <div class="progress-line"><span>Accessory progress</span><span id="accProgressText"></span></div>
